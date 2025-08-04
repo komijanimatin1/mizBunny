@@ -21,7 +21,7 @@ const FacilitiesScroll: React.FC = () => {
       id: 3,
       name: "فرادرس",
       icon: "https://logoyab.com/wp-content/uploads/2024/07/Faradars-Logo-1030x1030.png",
-      color: "#D1E0FE   "
+      color: "#D1E0FE"
     }
   ];
 
