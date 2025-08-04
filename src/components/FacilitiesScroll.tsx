@@ -9,19 +9,19 @@ const FacilitiesScroll: React.FC = () => {
       id: 1,
       name: "پادرو",
       icon: "https://s3.eseminar.tv/upload/host/1692004879-favicon.jpg",
-      description: "پلتفرم آموزشی پیشرفته"
+      color: "#D9C5FF"
     },
     {
       id: 2,
       name: "کاریزما",
       icon: "https://iranbroker.net/wp-content/uploads/2023/02/charisma.png",
-      description: "خدمات مالی و سرمایه‌گذاری"
+      color: "#FFE6E6"
     },
     {
       id: 3,
       name: "فرادرس",
       icon: "https://logoyab.com/wp-content/uploads/2024/07/Faradars-Logo-1030x1030.png",
-      description: "آموزش آنلاین تخصصی"
+      color: "#D1E0FE   "
     }
   ];
 
@@ -38,7 +38,11 @@ const FacilitiesScroll: React.FC = () => {
         ref={scrollRef}
       >
         {facilities.map((facility) => (
-          <div key={facility.id} className="facility-card">
+          <div 
+            key={facility.id} 
+            className="facility-card"
+            style={{ backgroundColor: facility.color }}
+          >
             <div className="facility-content">
               <div className="facility-icon">
                 <img 
@@ -53,10 +57,6 @@ const FacilitiesScroll: React.FC = () => {
                 <div className="fallback-icon hidden">
                   {facility.name.charAt(0)}
                 </div>
-              </div>
-              <div className="facility-info">
-                <h3 className="facility-name">{facility.name}</h3>
-                <p className="facility-description">{facility.description}</p>
               </div>
             </div>
           </div>
