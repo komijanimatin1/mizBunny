@@ -2,6 +2,7 @@ import React from 'react';
 import ServiceDetails from './ServiceDetails';
 import ServicesSection from './ServicesSection';
 import HorizontalScroll from './HorizontalScroll';
+import FacilitiesScroll from './FacilitiesScroll';
 import './HomeElements.css';
 
 const HomeElements = () => {
@@ -10,6 +11,8 @@ const HomeElements = () => {
             <ServiceDetails />
             <ServicesSection />
             <HorizontalScroll />
+            <FacilitiesScroll />
+            <FacilitiesScroll />
         </div>
     )
 }

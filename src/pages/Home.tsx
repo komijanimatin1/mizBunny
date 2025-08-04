@@ -8,6 +8,7 @@ const Home: React.FC = () => {
       <IonContent fullscreen>
         <div className="home-content">
           <HomeElements />
+          
         </div>
       </IonContent>
     </IonPage>
