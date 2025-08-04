@@ -1,6 +1,7 @@
 import React from 'react';
 import ServiceDetails from './ServiceDetails';
 import ServicesSection from './ServicesSection';
+import HorizontalScroll from './HorizontalScroll';
 import './HomeElements.css';
 
 const HomeElements = () => {
@@ -8,6 +9,7 @@ const HomeElements = () => {
         <div className="home-elements">
             <ServiceDetails />
             <ServicesSection />
+            <HorizontalScroll />
         </div>
     )
 }
