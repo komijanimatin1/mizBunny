@@ -1,12 +1,12 @@
 .service-details {
   width: 100%;
-  height: 20%;
+  height: 25%;
   background-color: #E4F2FF;
   border-radius: 12px;
   padding: 24px;
   margin-inline:auto;
   font-weight: bold;
-  font-size: medium;
+  font-size: smaller;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -21,6 +21,13 @@
   border-top: 1px solid #D5EBFF;
   display: flex;
   justify-content: space-around;
+}
+
+.user-informations div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-informations span {

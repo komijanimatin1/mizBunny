@@ -18,7 +18,7 @@ function ServiceDetails() {
           <span>۱۰۰,۰۰۰,۰۰۰ تومان</span>
         </div>
       </div>
-
+      
     </div>
   )
 }
