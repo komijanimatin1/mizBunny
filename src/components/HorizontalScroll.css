@@ -18,15 +18,15 @@
 }
 
 .snippet-card {
-  flex: 0 0 342px;
-  height: 117px;
+  flex: 0 0 365px;
+  height: 80px;
   scroll-snap-align: start;
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   border-radius: 12px;
   padding: 16px;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+  /* box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3); */
 }
 
 .snippet-content {
@@ -153,7 +153,7 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .indicator-dot {
@@ -173,26 +173,4 @@
 
 .indicator-dot:hover {
   background: #9ca3af;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-  .snippet-card {
-    flex: 0 0 300px;
-    height: 100px;
-    padding: 12px;
-  }
-  
-  .snippet-title {
-    font-size: 13px;
-  }
-  
-  .snippet-description {
-    font-size: 11px;
-  }
-  
-  .tablet-screen {
-    width: 50px;
-    height: 35px;
-  }
 }

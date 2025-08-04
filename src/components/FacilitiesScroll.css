@@ -1,0 +1,138 @@
+.facilities-scroll-container {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.facilities-title {
+  margin-bottom: 16px;
+  text-align: right;
+  direction: rtl;
+}
+
+.facilities-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #1f2937;
+}
+
+.facilities-scroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 10px;
+  padding: 0 16px;
+}
+
+.facilities-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.facility-card {
+  flex: 0 0 calc(50% - 8px);
+  height: 120px;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.facility-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.facility-icon {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  position: relative;
+}
+
+.facility-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.fallback-icon {
+  width: 40px;
+  height: 40px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.fallback-icon.hidden {
+  display: none;
+}
+
+.facility-info {
+  flex: 1;
+  text-align: right;
+  direction: rtl;
+}
+
+.facility-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #1f2937;
+}
+
+.facility-description {
+  font-size: 14px;
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+
+
+@media (max-width: 480px) {
+  .facility-card {
+    height: 100px;
+    padding: 12px;
+  }
+  
+  .facility-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .facility-icon img {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .fallback-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+  
+  .facility-name {
+    font-size: 14px;
+  }
+  
+  .facility-description {
+    font-size: 12px;
+  }
+}
