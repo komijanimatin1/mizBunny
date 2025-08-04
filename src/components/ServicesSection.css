@@ -1,0 +1,133 @@
+.services-section {
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.services-title {
+    text-align: right;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.services-title h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    display: inline-block;
+    background: white;
+    padding: 0 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.services-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #ddd;
+    z-index: 0;
+}
+
+/* Main Services - Two cards side by side */
+.main-services {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.service-card {
+    background: #F6F6F6;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.service-card:hover {
+    transform: translateY(-2px);
+}
+
+.main-service {
+    width: 48%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.service-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.su-icon {
+    background-color: #ff6b35;
+    /* Orange for Su */
+}
+
+.k-icon {
+    background-color: #28a745;
+    /* Green for K */
+}
+
+.v-icon {
+    background-color: #42b883;
+    /* Green for V */
+}
+
+.service-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Additional Services - Three cards in a row */
+.additional-services {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.additional-service {
+    width: 30%;
+    background-color: #F6F6F6;
+    border-radius: 12px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.additional-service .service-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.additional-service .service-name {
+    font-size: 0.8rem;
+}
