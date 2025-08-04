@@ -1,0 +1,37 @@
+.service-details {
+  width: 100%;
+  height: 25%;
+  background-color: #E4F2FF;
+  border-radius: 12px;
+  padding: 24px;
+  margin-inline:auto;
+  font-weight: bold;
+  font-size: smaller;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.service-details .detail-titles {
+  display: flex;
+  justify-content: space-between;
+}
+
+.service-details .user-informations{
+  border-top: 1px solid #D5EBFF;
+  display: flex;
+  justify-content: space-around;
+}
+
+.user-informations div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-informations span {
+  padding: 10px;
+  background-color: #CBE7FE;
+  /* border-radius:50%; */
+}
