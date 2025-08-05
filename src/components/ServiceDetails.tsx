@@ -1,12 +1,17 @@
 import React from 'react';
 import './ServiceDetails.css';
+import { IonIcon } from '@ionic/react';
+import { chevronBackOutline } from 'ionicons/icons';
 
 function ServiceDetails() {
   return (
     <div className="service-details">
       <div className="detail-titles">
-        <span>خدمات دریافتی</span>
         <span>اتاق دیجیتال</span>
+        <div>
+        <span>خدمات دریافتی</span>
+        <IonIcon icon={chevronBackOutline} className="back-icon"></IonIcon>
+        </div>
       </div>
       <div className="user-informations">
         <div>
@@ -18,7 +23,6 @@ function ServiceDetails() {
           <span className='user-information-numbers'>۱۰۰,۰۰۰,۰۰۰ تومان</span>
         </div>
       </div>
-
     </div>
   )
 }

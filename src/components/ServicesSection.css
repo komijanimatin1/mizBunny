@@ -21,23 +21,11 @@
     z-index: 1;
 }
 
-.services-title::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #ddd;
-    z-index: 0;
-}
-
 /* Main Services - Two cards side by side */
 .main-services {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 15px;
     margin-bottom: 10px;
     width: 100%;
 }
@@ -48,6 +36,7 @@
     text-align: center;
     transition: transform 0.2s ease;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .service-card:hover {
@@ -61,34 +50,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.service-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: white;
-}
-
-.su-icon {
-    background-color: #ff6b35;
-    /* Orange for Su */
-}
-
-.k-icon {
-    background-color: #28a745;
-    /* Green for K */
-}
-
-.v-icon {
-    background-color: #42b883;
-    /* Green for V */
+    gap: 12px;
+    
 }
 
 .service-name {
@@ -102,7 +65,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 10px;
     padding: 5px;
     border-radius: 12px;
     width: 100%;
@@ -114,6 +76,7 @@
     border-radius: 12px;
     min-height: 80px;
     display: flex;
+    gap: 8px;
     flex-direction: column;
     justify-content: center;
     align-items: center;

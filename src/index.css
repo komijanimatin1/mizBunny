@@ -1,3 +1,5 @@
+/* Import custom fonts */
+@import './theme/fonts.css';
 
 /* Ionic CSS imports */
 @import '@ionic/react/css/core.css';
@@ -11,3 +13,8 @@
 @import '@ionic/react/css/flex-utils.css';
 @import '@ionic/react/css/display.css';
 @import '@ionic/react/css/palettes/dark.system.css';
+
+/* Set default font family for the entire app */
+body {
+  font-family: var(--font-family-primary);
+}

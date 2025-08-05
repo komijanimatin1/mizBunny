@@ -9,17 +9,30 @@
   /* font-size: x-small; */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-around;
+  gap: 20px;
+  /* justify-content: space-around; */
   flex-direction: column;
 }
 
 .service-details .detail-titles {
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   display: flex;
   justify-content: space-around;
+  align-items: center;
+}
+
+.service-details .detail-titles div{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.service-details .detail-titles .back-icon {
+  color: #0067eb;
 }
 
 .service-details .user-informations{
+  padding-top: 10px;
   border-top: 1px solid #D5EBFF;
   display: flex;
   justify-content: space-around;
@@ -32,13 +45,14 @@
   justify-content: center;
 }
 
-.user-informations div span{
-  /* margin-block: 5px; */
+.user-informations div span:first-child{
+  margin-bottom: 10px;
 }
 
 .user-informations .user-information-numbers {
   font-size: medium;
   padding: 5px;
   background-color: #CBE7FE;
-  /* border-radius:50%; */
+  padding: 8px;
+  border-radius: 40px;
 }

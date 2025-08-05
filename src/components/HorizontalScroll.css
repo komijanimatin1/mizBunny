@@ -19,7 +19,6 @@
 
 .snippet-card {
   flex: 0 0 365px;
-  height: 80px;
   scroll-snap-align: start;
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   border-radius: 12px;

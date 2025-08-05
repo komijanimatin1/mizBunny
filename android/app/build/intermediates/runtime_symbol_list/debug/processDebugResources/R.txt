@@ -635,6 +635,7 @@ int drawable abc_textfield_search_activated_mtrl_alpha 0x7f07004c
 int drawable abc_textfield_search_default_mtrl_alpha 0x7f07004d
 int drawable abc_textfield_search_material 0x7f07004e
 int drawable abc_vector_test 0x7f07004f
+int drawable arrow_right 0x7f070078
 int drawable btn_checkbox_checked_mtrl 0x7f070050
 int drawable btn_checkbox_checked_to_unchecked_mtrl_animation 0x7f070051
 int drawable btn_checkbox_unchecked_mtrl 0x7f070052
@@ -648,7 +649,6 @@ int drawable compat_splash_screen_no_icon_background 0x7f070059
 int drawable ic_action_next_item 0x7f07005a
 int drawable ic_action_previous_item 0x7f07005b
 int drawable ic_action_remove 0x7f07005c
-int drawable ic_arrow_right 0x7f070077
 int drawable ic_call_answer 0x7f07005d
 int drawable ic_call_answer_low 0x7f07005e
 int drawable ic_call_answer_video 0x7f07005f
@@ -658,6 +658,7 @@ int drawable ic_call_decline_low 0x7f070062
 int drawable ic_launcher_background 0x7f070063
 int drawable ic_launcher_foreground 0x7f070064
 int drawable icon_background 0x7f070065
+int drawable more 0x7f070079
 int drawable notification_action_background 0x7f070066
 int drawable notification_bg 0x7f070067
 int drawable notification_bg_low 0x7f070068

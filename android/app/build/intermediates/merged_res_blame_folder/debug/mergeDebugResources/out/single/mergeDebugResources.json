@@ -16,12 +16,12 @@
         "source": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-main-29:\\layout\\activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-main-29:\\mipmap-xhdpi\\ic_launcher_round.png"
+        "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\drawable_ic_arrow_right.png.flat",
+        "source": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-main-29:\\drawable\\ic_arrow_right.png"
     },
     {
-        "merged": "io.ionic.starter.app-debug-27:/drawable_ic_arrow_right.png.flat",
-        "source": "io.ionic.starter.app-main-29:/drawable/ic_arrow_right.png"
+        "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-main-29:\\mipmap-xhdpi\\ic_launcher_round.png"
     },
     {
         "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\drawable-land-mdpi_splash.png.flat",
@@ -42,6 +42,10 @@
     {
         "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\drawable_splash.png.flat",
         "source": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-main-29:\\drawable\\splash.png"
+    },
+    {
+        "merged": "io.ionic.starter.app-debug-27:/drawable_arrow_right.xml.flat",
+        "source": "io.ionic.starter.app-main-29:/drawable/arrow_right.xml"
     },
     {
         "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\xml_file_paths.xml.flat",
@@ -106,6 +110,10 @@
     {
         "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\xml_config.xml.flat",
         "source": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-main-29:\\xml\\config.xml"
+    },
+    {
+        "merged": "io.ionic.starter.app-debug-27:/drawable_more.xml.flat",
+        "source": "io.ionic.starter.app-main-29:/drawable/more.xml"
     },
     {
         "merged": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-debug-27:\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
