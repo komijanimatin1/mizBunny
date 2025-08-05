@@ -3,6 +3,7 @@
   height: 100%;
   background-color: #E0E0E0;
   padding: 16px;
+  padding-bottom: 80px; /* Add space for the toolbar */
   font-size: 18px;
   color: #333;
 }

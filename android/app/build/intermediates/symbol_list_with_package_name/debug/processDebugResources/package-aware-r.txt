@@ -646,6 +646,10 @@ drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
 drawable compat_splash_screen
 drawable compat_splash_screen_no_icon_background
+drawable ic_action_next_item
+drawable ic_action_previous_item
+drawable ic_action_remove
+drawable ic_arrow_right
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video

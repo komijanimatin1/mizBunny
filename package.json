@@ -23,6 +23,7 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "cordova-plugin-inappbrowser": "github:komijanimatin1/custom-cordova-plugin-inappbrowser",
     "ionicons": "^7.4.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
