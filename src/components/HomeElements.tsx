@@ -45,7 +45,7 @@ const financialServices = {
             {
                 id: 2,
                 title: "کارن کراود",
-                icon: "https://www.karencrowd.com/images/logo.png",
+                icon: "https://karboom.io/storage/employers/logo/8rg2reNiVTHi3WtyCXrbCtXKcxudVynh1PaehH2E.png",
                 url: "https://www.karencrowd.com/accept-term/login",
                 color: "#e6faff"
             }, 

@@ -1,10 +1,10 @@
 .facilities-scroll-container {
   width: 100%;
-  margin-top: 10px;
+  margin: 16px 0;
 }
 
 .facilities-title {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   text-align: right;
   direction: rtl;
 }
@@ -22,7 +22,7 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   gap: 10px;
-  padding: 0 16px;
+  padding-left: 16px;
 }
 
 .facilities-scroll::-webkit-scrollbar {

@@ -7,7 +7,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
 
   const handleItemClick = async (url: string, title: string) => {
     try {
-      await openBrowser(url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},closebuttoncaption=Close,closebuttoncolor=#5d5d5d,menu=yes,hardwareback=yes`);
+      await openBrowser(url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},closebuttoncolor=#5d5d5d,menu=yes,hardwareback=yes`);
     } catch (err) {
       console.error('Failed to open:', err);
     }
