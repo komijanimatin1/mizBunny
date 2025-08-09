@@ -1,6 +1,6 @@
 .service-details {
   width: 100%;
-  height: 152px;
+  height: 160px;
   background-color: #E4F2FF;
   border-radius: 12px;
   padding: 10px;
@@ -55,4 +55,23 @@
   background-color: #CBE7FE;
   padding: 8px;
   border-radius: 40px;
+  text-align: center;
+}
+
+@media (max-width: 359px) {
+  .service-details,
+  .service-details .detail-titles,
+  .service-details .detail-titles div,
+  .service-details .user-informations,
+  .user-informations div,
+  .user-informations .user-information-numbers {
+    font-weight: 300;
+    font-size:small ;
+  }
+  .detail-titles{
+    gap: 8px;
+  }
+  .user-informations{
+    gap: 8px;
+  }
 }

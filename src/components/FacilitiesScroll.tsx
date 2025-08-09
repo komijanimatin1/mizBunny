@@ -1,16 +1,40 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import './FacilitiesScroll.css';
+import ConfirmationModal from './ConfirmationModal';
+
 const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { openBrowser } = useInAppBrowser();
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    url: string;
+    title: string;
+  }>({
+    isOpen: false,
+    url: '',
+    title: ''
+  });
 
-  const handleItemClick = async (url: string, title: string) => {
+  const handleItemClick = (url: string, title: string) => {
+    setModalState({
+      isOpen: true,
+      url,
+      title
+    });
+  };
+
+  const handleConfirmOpen = async () => {
     try {
-      await openBrowser(url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},closebuttoncolor=#5d5d5d,menu=yes,hardwareback=yes`);
+      await openBrowser(modalState.url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${modalState.title},closebuttoncolor=#5d5d5d,menu=yes,hardwareback=yes`);
     } catch (err) {
       console.error('Failed to open:', err);
     }
+    setModalState({ isOpen: false, url: '', title: '' });
+  };
+
+  const handleCancelOpen = () => {
+    setModalState({ isOpen: false, url: '', title: '' });
   };
 
 
@@ -50,6 +74,13 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
         ))}
       </div>
       
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={modalState.isOpen}
+        onConfirm={handleConfirmOpen}
+        onCancel={handleCancelOpen}
+        siteName={modalState.title}
+      />
 
     </div>
   );

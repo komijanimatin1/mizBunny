@@ -4,12 +4,15 @@ color ic_launcher_background
 drawable arrow_right
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_launcher_round_background
 drawable more
 drawable splash
 layout activity_main
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
+mipmap ic_launcher_round_foreground
+mipmap ic_launcher_round_round
 string app_name
 string custom_url_scheme
 string package_name

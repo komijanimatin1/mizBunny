@@ -16,6 +16,7 @@
     "@capacitor/app": "7.0.1",
     "@capacitor/core": "7.4.2",
     "@capacitor/haptics": "7.0.1",
+    "@capacitor/ios": "^7.4.2",
     "@capacitor/keyboard": "7.0.1",
     "@capacitor/status-bar": "7.0.1",
     "@iconify/react": "^6.0.0",
@@ -29,7 +30,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "^5.3.4",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "scroll-snap": "^5.0.2"
   },
   "devDependencies": {
     "@capacitor/cli": "7.4.2",

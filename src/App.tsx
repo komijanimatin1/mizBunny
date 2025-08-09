@@ -4,6 +4,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import { useState } from 'react';
 import Home from './pages/Home';
 import SplashScreen from './components/SplashScreen';
+import AIPage from './pages/AIPage';
+import Profile from './pages/Profile';
+import ToolbarSection from './components/ToolbarSection';
 
 /* Theme variables */
 import './theme/variables.css';
@@ -32,10 +35,18 @@ const App: React.FC = () => {
           <Route exact path="/home">
             <Home />
           </Route>
+          <Route exact path="/ai">
+            <AIPage />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
+          </Route>
           <Route exact path="/">
             <Redirect to="/home" />
           </Route>
         </IonRouterOutlet>
+        {/* Persistent custom toolbar over all routes */}
+        <ToolbarSection />
       </IonReactRouter>
     </IonApp>
   );

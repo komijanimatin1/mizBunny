@@ -1,4 +1,3 @@
-import React from 'react';
 import ServiceDetails from './ServiceDetails';
 import ServicesSection from './ServicesSection';
 import HorizontalScroll from './HorizontalScroll';
@@ -37,7 +36,7 @@ const financialServices = {
         facilities: [
             {
                 id: 1,
-                title: "اینوستریون",
+                title:"اینوستوران",
                 icon: "https://shenasa.ir/wp-content/uploads/2024/09/%D8%A7%DB%8C%D9%86%D9%88%D8%B3%D8%AA%D9%88%D8%B1%D8%A7%D9%86.png",
                 url: "https://www.investorun.com/login",
                 color: "#fff5c5"

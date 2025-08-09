@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { IonIcon } from '@ionic/react';
+import React, { useEffect, useRef } from 'react';
+import { IonIcon, useIonRouter } from '@ionic/react';
+import { useLocation } from 'react-router-dom';
 import {
   colorWandOutline,
   colorWand,
@@ -10,11 +11,34 @@ import {
 } from 'ionicons/icons';
 import './ToolbarSection.css';
 
-const ToolbarSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'ai' | 'profile' | 'home'>('home');
+type TabKey = 'ai' | 'profile' | 'home';
 
-  const handleTabClick = (tab: 'ai' | 'profile' | 'home') => {
-    setActiveTab(tab);
+const ToolbarSection: React.FC = () => {
+  const router = useIonRouter();
+  const { pathname } = useLocation();
+
+  const activeTab: TabKey = pathname.startsWith('/ai')
+    ? 'ai'
+    : pathname.startsWith('/profile')
+    ? 'profile'
+    : 'home';
+
+  const prevTabRef = useRef<TabKey>(activeTab);
+
+  useEffect(() => {
+    prevTabRef.current = activeTab;
+  }, [activeTab]);
+
+  const handleTabClick = (tab: TabKey) => {
+    const target = tab === 'home' ? '/home' : `/${tab}`;
+    if (pathname === target) return;
+
+    const order: TabKey[] = ['home', 'profile', 'ai'];
+    const fromIndex = order.indexOf(prevTabRef.current);
+    const toIndex = order.indexOf(tab);
+    const direction = toIndex > fromIndex ? 'forward' : 'back';
+
+    router.push(target, direction);
   };
 
   return (

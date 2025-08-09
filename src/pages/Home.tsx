@@ -1,6 +1,5 @@
 import { IonContent, IonPage } from '@ionic/react';
 import HomeElements from '../components/HomeElements';
-import ToolbarSection from '../components/ToolbarSection';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -8,8 +7,11 @@ const Home: React.FC = () => {
     <IonPage>
       <IonContent fullscreen>
         <div className="home-content">
-          <HomeElements />
-          <ToolbarSection />
+          <div className="content-container">
+            <div className="content-slide slide-in">
+              <HomeElements />
+            </div>
+          </div>
         </div>
       </IonContent>
     </IonPage>
