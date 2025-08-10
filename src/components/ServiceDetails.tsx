@@ -1,6 +1,5 @@
 import './ServiceDetails.css';
-import { IonIcon } from '@ionic/react';
-import { chevronBackOutline } from 'ionicons/icons';
+import { Icon } from '@iconify/react';
 
 function ServiceDetails() {
   return (
@@ -12,7 +11,7 @@ function ServiceDetails() {
         </div>
         <div>
         <span>خدمات دریافتی</span>
-        <IonIcon icon={chevronBackOutline} className="back-icon"></IonIcon>
+        <Icon icon="fluent:chevron-left-12-filled" width="16" height="16" />
         </div>
       </div>
       <div className="user-informations">
