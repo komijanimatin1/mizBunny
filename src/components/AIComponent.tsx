@@ -10,10 +10,12 @@ const AIComponent: React.FC = () => {
       </div>
       <div className="ai-iframe-container">
         <iframe
-          src="http://dify.fanap.mizbunny.com/chatbot/dVdAMx1R1qbxoGc2"
+          src="https://dify.fanap.mizbunny.com/chatbot/dVdAMx1R1qbxoGc2"
           title="AI Chatbot"
           className="ai-iframe"
           frameBorder="0"
+          inputMode="text"
+          lang='fa'
           allow="microphone; camera; geolocation"
         />
       </div>
