@@ -393,6 +393,7 @@ int color foreground_material_light 0x7f050035
 int color highlighted_text_material_dark 0x7f050036
 int color highlighted_text_material_light 0x7f050037
 int color ic_launcher_background 0x7f050038
+int color ic_launcher_round_background 0x7f05005d
 int color material_blue_grey_800 0x7f050039
 int color material_blue_grey_900 0x7f05003a
 int color material_blue_grey_950 0x7f05003b
