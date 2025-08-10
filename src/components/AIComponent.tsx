@@ -4,10 +4,10 @@ import './AIComponent.css';
 const AIComponent: React.FC = () => {
   return (
     <div className="ai-component">
-      <div className="ai-header">
+      {/* <div className="ai-header">
         <h2>AI Assistant</h2>
         <p>Chat with our AI assistant for help and support</p>
-      </div>
+      </div> */}
       <div className="ai-iframe-container">
         <iframe
           src="https://dify.fanap.mizbunny.com/chatbot/dVdAMx1R1qbxoGc2"
