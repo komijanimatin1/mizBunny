@@ -733,8 +733,8 @@ BOOL isExiting = FALSE;
     CGRect webViewBounds = self.view.bounds;
     BOOL toolbarIsAtBottom = ![browserOptions.toolbarposition isEqualToString:kInAppBrowserToolbarBarPositionTop];
     
-    // Add top margin to avoid camera punch area (24pt equivalent)
-    CGFloat topMargin = 24.0;
+    // Add top margin to avoid camera punch area (48pt equivalent - matches Android exactly)
+    CGFloat topMargin = 48.0;
     webViewBounds.origin.y += topMargin;
     webViewBounds.size.height -= topMargin;
     
@@ -747,7 +747,7 @@ BOOL isExiting = FALSE;
         webViewBounds.size.height -= TOOLBAR_HEIGHT;
     }
     
-    // Apply 16pt margins to WebView bounds to create spacing from screen edges
+    // Apply 16pt margins to WebView bounds to create spacing from screen edges (matches Android exactly)
     webViewBounds.origin.x += 16.0;
     webViewBounds.origin.y += 16.0;
     webViewBounds.size.width -= 32.0; // 16pt on each side
@@ -809,10 +809,10 @@ BOOL isExiting = FALSE;
     }
 #endif
 
-    // Create a container view for the WebView with rounded corners
+    // Create a container view for the WebView with rounded corners (matches Android exactly)
     UIView *webViewContainer = [[UIView alloc] initWithFrame:webViewBounds];
     webViewContainer.backgroundColor = [UIColor whiteColor];
-    webViewContainer.layer.cornerRadius = 20.0; // 20pt border radius to match Android
+    webViewContainer.layer.cornerRadius = 20.0; // 20pt border radius to match Android exactly
     webViewContainer.layer.masksToBounds = YES; // Clip WebView content to rounded corners
     webViewContainer.clipsToBounds = YES;
     
@@ -886,6 +886,16 @@ BOOL isExiting = FALSE;
     self.toolbar.barTintColor = [UIColor colorWithHexString:@"#F2F2F2"];
     self.toolbar.autoresizingMask = toolbarIsAtBottom ? (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin) : UIViewAutoresizingFlexibleWidth;
     
+    // Remove default iOS toolbar styling to eliminate dark lines
+    self.toolbar.translucent = NO;
+    self.toolbar.barStyle = UIBarStyleDefault;
+    if ([self.toolbar respondsToSelector:@selector(setShadowImage:forToolbarPosition:)]) {
+        [self.toolbar setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionBottom];
+    }
+    if ([self.toolbar respondsToSelector:@selector(setBackgroundImage:forToolbarPosition:barMetrics:)]) {
+        [self.toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionBottom barMetrics:UIBarMetricsDefault];
+    }
+    
     CGFloat labelInset = 5.0;
     float locationBarY = toolbarIsAtBottom ? self.view.bounds.size.height - FOOTER_HEIGHT : self.view.bounds.size.height - LOCATIONBAR_HEIGHT;
     
@@ -923,8 +933,8 @@ BOOL isExiting = FALSE;
     [self.AIButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.AIButton.layer.cornerRadius = 8.0f;
     self.AIButton.layer.masksToBounds = YES;
-    self.AIButton.contentEdgeInsets = UIEdgeInsetsMake(12, 16, 12, 16);
-    self.AIButton.titleLabel.font = [UIFont systemFontOfSize:14.0]; // Match Android text size
+    self.AIButton.contentEdgeInsets = UIEdgeInsetsMake(12, 16, 12, 16); // Match Android padding exactly
+    self.AIButton.titleLabel.font = [UIFont systemFontOfSize:14.0]; // Match Android text size exactly
     [self.AIButton setTitle:@"AI" forState:UIControlStateNormal];
     [self.AIButton addTarget:self action:@selector(injectScript) forControlEvents:UIControlEventTouchUpInside];
     [self.AIButton addTarget:self action:@selector(buttonTouchDown:) forControlEvents:UIControlEventTouchDown];
@@ -933,12 +943,12 @@ BOOL isExiting = FALSE;
 
     // Create three-dot menu button
     self.menuButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.menuButton.backgroundColor = [UIColor colorWithHexString:@"#E0E0E0"];
+    self.menuButton.backgroundColor = [UIColor colorWithHexString:@"#F0F0F0"]; // Light gray to match Android exactly
     [self.menuButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.menuButton.layer.cornerRadius = 8.0f;
     self.menuButton.layer.masksToBounds = YES;
-    self.menuButton.contentEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12); // Smaller padding than AI button
-    self.menuButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    self.menuButton.contentEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12); // Match Android padding exactly
+    self.menuButton.titleLabel.font = [UIFont systemFontOfSize:14.0]; // Match Android text size exactly
     [self.menuButton setTitle:@"⋮" forState:UIControlStateNormal]; // Three dots
     [self.menuButton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
     [self.menuButton addTarget:self action:@selector(buttonTouchDown:) forControlEvents:UIControlEventTouchDown];
@@ -948,17 +958,33 @@ BOOL isExiting = FALSE;
     self.footerTitleLabel = [[UILabel alloc] init];
     self.footerTitleLabel.textAlignment = NSTextAlignmentCenter;
     self.footerTitleLabel.textColor = [UIColor blackColor];
-    self.footerTitleLabel.font = [UIFont systemFontOfSize:28.0]; // Match Android text size
+    self.footerTitleLabel.font = [UIFont systemFontOfSize:28.0]; // Match Android text size exactly
     [self.toolbar addSubview:self.footerTitleLabel];
 
     self.closeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.closeButton.backgroundColor = [UIColor colorWithHexString:@"#E0E0E0"];
-    [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.closeButton.backgroundColor = [UIColor colorWithHexString:@"#F0F0F0"]; // Light gray to match Android
     self.closeButton.layer.cornerRadius = 8.0f;
     self.closeButton.layer.masksToBounds = YES;
     self.closeButton.contentEdgeInsets = UIEdgeInsetsMake(12, 16, 12, 16);
-    self.closeButton.titleLabel.font = [UIFont systemFontOfSize:14.0]; // Match Android text size
-    [self.closeButton setTitle:@"Close" forState:UIControlStateNormal];
+    
+    // Use right arrow icon like Android instead of text
+    UIImage *rightArrowImage = [UIImage systemImageNamed:@"chevron.right"];
+    if (rightArrowImage == nil) {
+        // Fallback for older iOS versions
+        rightArrowImage = [UIImage imageNamed:@"arrow_right"];
+    }
+    if (rightArrowImage != nil) {
+        [self.closeButton setImage:rightArrowImage forState:UIControlStateNormal];
+        self.closeButton.tintColor = [UIColor blackColor];
+        // Remove title since we're using image
+        [self.closeButton setTitle:nil forState:UIControlStateNormal];
+    } else {
+        // Fallback to text if no image available
+        [self.closeButton setTitle:@"Close" forState:UIControlStateNormal];
+        [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        self.closeButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    }
+    
     [self.closeButton addTarget:self action:@selector(closeOrGoBack) forControlEvents:UIControlEventTouchUpInside];
     [self.closeButton addTarget:self action:@selector(buttonTouchDown:) forControlEvents:UIControlEventTouchDown];
     [self.closeButton addTarget:self action:@selector(buttonTouchUp:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
@@ -1245,9 +1271,9 @@ BOOL isExiting = FALSE;
         if (sender == self.AIButton) {
             sender.backgroundColor = [UIColor colorWithHexString:@"#8A3FD1"]; // Darker purple
         } else if (sender == self.closeButton) {
-            sender.backgroundColor = [UIColor colorWithHexString:@"#BDBDBD"]; // Darker gray
+            sender.backgroundColor = [UIColor colorWithHexString:@"#D0D0D0"]; // Darker gray to match Android
         } else if (sender == self.menuButton) {
-            sender.backgroundColor = [UIColor colorWithHexString:@"#BDBDBD"]; // Darker gray
+            sender.backgroundColor = [UIColor colorWithHexString:@"#D0D0D0"]; // Darker gray to match Android
         }
     }];
 }
@@ -1257,9 +1283,9 @@ BOOL isExiting = FALSE;
         if (sender == self.AIButton) {
             sender.backgroundColor = [UIColor colorWithHexString:@"#AB4CFF"]; // Original purple
         } else if (sender == self.closeButton) {
-            sender.backgroundColor = [UIColor colorWithHexString:@"#E0E0E0"]; // Original gray
+            sender.backgroundColor = [UIColor colorWithHexString:@"#F0F0F0"]; // Light gray to match Android
         } else if (sender == self.menuButton) {
-            sender.backgroundColor = [UIColor colorWithHexString:@"#E0E0E0"]; // Original gray
+            sender.backgroundColor = [UIColor colorWithHexString:@"#F0F0F0"]; // Light gray to match Android
         }
     }];
 }
@@ -1451,12 +1477,9 @@ BOOL isExiting = FALSE;
 }
 
 - (void)updateCloseButtonTitle {
-    // Always check the current state of the WebView
-    if (self.webView.canGoBack) {
-        [self.closeButton setTitle:@"Back" forState:UIControlStateNormal];
-    } else {
-        [self.closeButton setTitle:@"Close" forState:UIControlStateNormal];
-    }
+    // Since we're using arrow icon like Android, we don't need to update text
+    // The arrow icon represents both back and close functionality
+    // Just keep the same right arrow icon regardless of navigation state
 }
 
 - (void)closeOrGoBack {
@@ -1511,7 +1534,7 @@ BOOL isExiting = FALSE;
 
 - (void) rePositionViews {
     CGFloat statusBarHeight = [self getStatusBarOffset];
-    CGFloat footerHeight = 120.0; // Updated to match Android (120pt)
+    CGFloat footerHeight = 120.0; // Match Android footer height exactly
     
     // Calculate the available height for the webView
     CGFloat availableHeight = self.view.bounds.size.height - statusBarHeight;
@@ -1524,8 +1547,9 @@ BOOL isExiting = FALSE;
         CGRect footerFrame = CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight);
         self.toolbar.frame = footerFrame;
         
-        // Position webView container with 16pt margins and account for status bar
-        CGRect webViewContainerFrame = CGRectMake(16, statusBarHeight + 16, self.view.bounds.size.width - 32, availableHeight - 32);
+        // Position webView container with 16pt margins and account for status bar (matches Android exactly)
+        // Use 16pt bottom margin to match Android spacing exactly
+        CGRect webViewContainerFrame = CGRectMake(16, statusBarHeight + 16, self.view.bounds.size.width - 32, availableHeight - 16);
         
         // Find the WebView container (first subview that's not toolbar, addressLabel, or spinner)
         UIView *webViewContainer = nil;
@@ -1540,18 +1564,18 @@ BOOL isExiting = FALSE;
             webViewContainer.frame = webViewContainerFrame;
         }
         
-        // Position buttons and title in footer with 16pt padding
+        // Position buttons and title in footer with exact Android spacing
         [self.AIButton sizeToFit];
         CGRect aiButtonFrame = self.AIButton.frame;
-        aiButtonFrame.origin.x = 16; // 16pt padding from left
+        aiButtonFrame.origin.x = 16; // 16pt padding from left edge (matches Android)
         aiButtonFrame.origin.y = (footerHeight - aiButtonFrame.size.height) / 2;
         self.AIButton.frame = aiButtonFrame;
 
-        // Position menu button if enabled
+        // Position menu button if enabled - group with AI button on left side
         if (browserOptions.menu) {
             [self.menuButton sizeToFit];
             CGRect menuButtonFrame = self.menuButton.frame;
-            menuButtonFrame.origin.x = CGRectGetMaxX(aiButtonFrame) + 8; // 8pt spacer after AI button
+            menuButtonFrame.origin.x = CGRectGetMaxX(aiButtonFrame) + 8; // 8pt spacing between left buttons (matches Android)
             menuButtonFrame.origin.y = (footerHeight - menuButtonFrame.size.height) / 2;
             self.menuButton.frame = menuButtonFrame;
             self.menuButton.hidden = NO;
@@ -1559,20 +1583,22 @@ BOOL isExiting = FALSE;
             self.menuButton.hidden = YES;
         }
 
+        // Position close button at far right with 16pt padding (matches Android)
         [self.closeButton sizeToFit];
         CGRect closeButtonFrame = self.closeButton.frame;
-        closeButtonFrame.origin.x = self.view.bounds.size.width - closeButtonFrame.size.width - 16; // 16pt padding from right
+        closeButtonFrame.origin.x = self.view.bounds.size.width - closeButtonFrame.size.width - 16;
         closeButtonFrame.origin.y = (footerHeight - closeButtonFrame.size.height) / 2;
         self.closeButton.frame = closeButtonFrame;
 
-        // Calculate title position based on whether menu is visible
+        // Position title in center with balanced spacing (matches Android layout exactly)
+        // Android uses 16dp footer padding, so we use 16pt spacing from buttons
         CGFloat titleLabelX;
         if (browserOptions.menu) {
-            titleLabelX = CGRectGetMaxX(self.menuButton.frame) + 16;
+            titleLabelX = CGRectGetMaxX(self.menuButton.frame) + 16; // 16pt spacing from left button group (matches Android 16dp)
         } else {
-            titleLabelX = CGRectGetMaxX(aiButtonFrame) + 16;
+            titleLabelX = CGRectGetMaxX(aiButtonFrame) + 16; // 16pt spacing from left button (matches Android 16dp)
         }
-        CGFloat titleLabelWidth = CGRectGetMinX(closeButtonFrame) - titleLabelX - 16;
+        CGFloat titleLabelWidth = CGRectGetMinX(closeButtonFrame) - titleLabelX - 16; // 16pt spacing from right button (matches Android 16dp)
         self.footerTitleLabel.frame = CGRectMake(titleLabelX, 0, titleLabelWidth, footerHeight);
         
     } else {

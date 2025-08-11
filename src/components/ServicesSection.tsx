@@ -26,7 +26,7 @@ const ServicesSection = () => {
         <Icon icon="fluent:notepad-person-20-filled" width="32 " height="32" />
           <div className="service-name">کارتابل</div>
         </div>
-        <div className="service-card main-service" onClick={() => handleServiceClick('https://library-front.linuxchi.ir/', 'رسانه')} style={{ cursor: 'pointer' }}>
+        <div className="service-card main-service" onClick={() => handleServiceClick('https://Media.dccim.ir/', 'رسانه')} style={{ cursor: 'pointer' }}>
           <Icon icon="fluent:video-clip-multiple-24-filled" width="32" height="32"   />
           <div className="service-name">رسانه</div>
         </div>
