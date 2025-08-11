@@ -659,6 +659,7 @@ drawable ic_call_decline
 drawable ic_call_decline_low
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_launcher_monochrome
 drawable ic_launcher_round_background
 drawable icon_background
 drawable more
@@ -675,6 +676,8 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable room_logo
+drawable room_logo_monochrome
 drawable splash
 drawable test_level_drawable
 drawable tooltip_frame_dark
