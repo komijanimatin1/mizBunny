@@ -1,40 +1,16 @@
 import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import './ServicesSection.css';
 import { Icon } from '@iconify/react';
-import ConfirmationModal from './ConfirmationModal';
-import { useState } from 'react';
 
 const ServicesSection = () => {
   const { openBrowser } = useInAppBrowser();
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    url: string;
-    title: string;
-  }>({
-    isOpen: false,
-    url: '',
-    title: ''
-  });
 
-  const handleServiceClick = (url: string, title: string) => {
-    setModalState({
-      isOpen: true,
-      url,
-      title
-    });
-  };
-
-  const handleConfirmOpen = async () => {
+  const handleServiceClick = async (url: string, title: string) => {
     try {
-      await openBrowser(modalState.url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${modalState.title},menu=yes,hardwareback=yes`);
+      await openBrowser(url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},menu=yes,hardwareback=yes`);
     } catch (err) {
       console.error('Failed to open:', err);
     }
-    setModalState({ isOpen: false, url: '', title: '' });
-  };
-
-  const handleCancelOpen = () => {
-    setModalState({ isOpen: false, url: '', title: '' });
   };
 
   return (
@@ -70,14 +46,6 @@ const ServicesSection = () => {
           <div className="service-name">رویداد</div>
         </div>
       </div>
-
-      {/* Confirmation Modal */}
-      <ConfirmationModal
-        isOpen={modalState.isOpen}
-        onConfirm={handleConfirmOpen}
-        onCancel={handleCancelOpen}
-        siteName={modalState.title}
-      />
     </div>
   );
 };

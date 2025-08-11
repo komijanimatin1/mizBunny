@@ -5,8 +5,11 @@ color ic_launcher_round_background
 drawable arrow_right
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_launcher_monochrome
 drawable ic_launcher_round_background
 drawable more
+drawable room_logo
+drawable room_logo_monochrome
 drawable splash
 layout activity_main
 mipmap ic_launcher
