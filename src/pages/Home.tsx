@@ -1,5 +1,5 @@
 import { IonContent, IonPage } from '@ionic/react';
-import HomeElements from '../components/HomeElements';
+import HomeElements from '../components/home/HomeElements';
 import { useBackButton } from '../hooks/useBackButton';
 import './Home.css';
 

@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
-import { useInAppBrowser } from '../hooks/useInAppBrowser';
+import React, { useRef, useState, useEffect } from 'react';
+import { useInAppBrowser } from '../../hooks/useInAppBrowser';
 import './FacilitiesScroll.css';
-import ConfirmationModal from './ConfirmationModal';
+import ConfirmationModal from '../ui/ConfirmationModal';
 
 const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -16,6 +16,34 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
     title: ''
   });
 
+  // Reset modal state when web view is closed
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && modalState.isOpen) {
+        // Web view was likely closed, reset modal state
+        setModalState({ isOpen: false, url: '', title: '' });
+      }
+    };
+
+    const handleFocus = () => {
+      // When app regains focus, check if modal should be closed
+      if (modalState.isOpen) {
+        // Small delay to ensure web view is fully closed
+        setTimeout(() => {
+          setModalState({ isOpen: false, url: '', title: '' });
+        }, 100);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [modalState.isOpen]);
+
   const handleItemClick = (url: string, title: string) => {
     setModalState({
       isOpen: true,
@@ -25,12 +53,15 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
   };
 
   const handleConfirmOpen = async () => {
+    // Close modal immediately when confirm button is clicked
+    setModalState({ isOpen: false, url: '', title: '' });
+    
     try {
       await openBrowser(modalState.url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${modalState.title},closebuttoncolor=#5d5d5d,menu=yes,hardwareback=yes`);
     } catch (err) {
       console.error('Failed to open:', err);
+      // Modal is already closed, no need to handle error state
     }
-    setModalState({ isOpen: false, url: '', title: '' });
   };
 
   const handleCancelOpen = () => {

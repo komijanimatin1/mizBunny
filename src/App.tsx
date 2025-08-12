@@ -3,10 +3,10 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { useState } from 'react';
 import Home from './pages/Home';
-import SplashScreen from './components/SplashScreen';
+import SplashScreen from './components/home/SplashScreen';
 import AIPage from './pages/AIPage';
 import Profile from './pages/Profile';
-import ToolbarSection from './components/ToolbarSection';
+import ToolbarSection from './components/home/ToolbarSection';
 
 /* Theme variables */
 import './theme/variables.css';

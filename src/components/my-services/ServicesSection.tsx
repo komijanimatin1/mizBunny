@@ -1,4 +1,4 @@
-import { useInAppBrowser } from '../hooks/useInAppBrowser';
+import { useInAppBrowser } from '../../hooks/useInAppBrowser';
 import './ServicesSection.css';
 import { Icon } from '@iconify/react';
 

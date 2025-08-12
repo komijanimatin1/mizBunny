@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonPage } from '@ionic/react';
-import AIComponent from '../components/AIComponent';
+import AIComponent from '../components/ai/AIComponent';
 import { useBackButton } from '../hooks/useBackButton';
 import './Home.css';
 

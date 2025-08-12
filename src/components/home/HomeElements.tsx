@@ -1,7 +1,7 @@
-import ServiceDetails from './ServiceDetails';
-import ServicesSection from './ServicesSection';
-import HorizontalScroll from './HorizontalScroll';
-import FacilitiesScroll from './FacilitiesScroll';
+import ServiceDetails from '../my-services/ServiceDetails';
+import ServicesSection from '../my-services/ServicesSection';
+import HorizontalScroll from '../ui/HorizontalScroll';
+import FacilitiesScroll from '../third-party/FacilitiesScroll';
 import './HomeElements.css';
 
 const facilities = {
