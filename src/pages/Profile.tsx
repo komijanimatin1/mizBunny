@@ -1,7 +1,6 @@
 import React from 'react';
 import { IonContent, IonPage } from '@ionic/react';
 import { useBackButton } from '../hooks/useBackButton';
-import './Home.css';
 
 const Profile: React.FC = () => {
   // Handle hardware back button navigation

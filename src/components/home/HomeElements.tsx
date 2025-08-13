@@ -2,7 +2,6 @@ import ServiceDetails from '../my-services/ServiceDetails';
 import ServicesSection from '../my-services/ServicesSection';
 import HorizontalScroll from '../ui/HorizontalScroll';
 import FacilitiesScroll from '../third-party/FacilitiesScroll';
-import './HomeElements.css';
 
 const facilities = {
     title: "لجستیک",
@@ -37,7 +36,7 @@ const financialServices = {
             {
                 id: 1,
                 title:"اینوستوران",
-                icon: "https://shenasa.ir/wp-content/uploads/2024/09/%D8%A7%DB%8C%D9%86%D9%88%D8%B3%D8%AA%D9%88%D8%B1%D8%A7%D9%86.png",
+                icon: "https://shenasa.ir/wp-content/uploads/2024/09/%D8%A7%DB%8C%D9%86%D9%88%D8%B3%D8%AA%D9%88%D8%B1%D8%A9%D9%86.png",
                 url: "https://www.investorun.com/login",
                 color: "#fff5c5"
             }, 
@@ -61,7 +60,7 @@ const financialServices = {
 
 const HomeElements = () => {
     return (
-        <div className="home-elements">
+        <div className="overflow-auto scrollbar-hide scroll-smooth bg-white w-full h-[90%] p-4 mt-10 rounded-2xl [&::-webkit-scrollbar]:hidden">
             <ServiceDetails />
             <ServicesSection />
             <HorizontalScroll />

@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useInAppBrowser } from '../../hooks/useInAppBrowser';
-import './FacilitiesScroll.css';
 import ConfirmationModal from '../ui/ConfirmationModal';
 
 const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
@@ -57,7 +56,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
     setModalState({ isOpen: false, url: '', title: '' });
     
     try {
-      await openBrowser(modalState.url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${modalState.title},closebuttoncolor=#5d5d5d,menu=yes,hardwareback=yes`);
+      await openBrowser(modalState.url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${modalState.title},closebuttoncolor=#5d5d5d,menu=no,hardwareback=yes,injection=yes,injectbutton=yes`);
     } catch (err) {
       console.error('Failed to open:', err);
       // Modal is already closed, no need to handle error state
@@ -70,33 +69,34 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
 
 
   return (
-    <div className="facilities-scroll-container">
-      <div className="facilities-title">
-        <h2>{facilities.title}</h2>
+    <div className="w-full my-4">
+      <div className="mb-2 text-right rtl">
+        <h2 className="text-lg font-semibold m-0 text-[#1f2937]">{facilities.title}</h2>
       </div>
       
       <div 
-        className="facilities-scroll"
+        className="flex overflow-x-auto scrollbar-hide scroll-smooth gap-2.5 pl-4 [&::-webkit-scrollbar]:hidden"
         ref={scrollRef}
       >
         {facilities.facilities.map((facility: any) => (
-          <div 
-            key={facility.id} 
-            className="facility-card"
-            style={{ backgroundColor: facility.color }}
-          >
-            <div className="facility-content" onClick={() => handleItemClick(facility.url, facility.title)}>
-              <div className="facility-icon">
+                  <div 
+          key={facility.id} 
+                     className="flex-none w-[calc(50%-8px)] h-30 md:h-30 bg-white rounded-xl p-4 md:p-4 flex items-center shadow-md border border-[#e5e7eb]"
+          style={{ backgroundColor: facility.color }}
+        >
+            <div className="flex items-center justify-center w-full h-full" onClick={() => handleItemClick(facility.url, facility.title)}>
+              <div className="flex-shrink-0 w-20 h-20 rounded-xl flex items-center justify-center bg-transparent relative">
                 <img 
                   src={facility.icon} 
                   alt={facility.title}
+                  className="w-15 h-15 object-contain rounded-lg"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                     target.nextElementSibling?.classList.remove('hidden');
                   }}
                 />
-                <div className="fallback-icon hidden">
+                <div className="w-10 h-10 bg-[#3b82f6] text-white rounded-lg flex items-center justify-center font-semibold text-lg hidden">
                   {facility.title.charAt(0)}
                 </div>
               </div>
