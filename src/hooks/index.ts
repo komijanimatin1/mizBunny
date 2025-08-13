@@ -1,2 +1,2 @@
-export { default as useBackButton } from './useBackButton';
-export { default as useInAppBrowser } from './useInAppBrowser';
+export { useBackButton } from './useBackButton';
+export { useInAppBrowser } from './useInAppBrowser';

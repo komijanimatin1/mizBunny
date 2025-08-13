@@ -1,15 +1,14 @@
 import React from 'react';
-import './AIComponent.css';
 
 const AIComponent: React.FC = () => {
 
   return (
-    <div className="ai-component">
-      <div className="ai-iframe-container">
+    <div className="flex flex-col bg-white w-full h-[90%] mt-10 rounded-2xl">
+      <div className="w-full h-full flex-1 relative overflow-hidden rounded-xl bg-white shadow-lg">
         <iframe
           src="https://dify.fanap.mizbunny.com/chat/dVdAMx1R1qbxoGc2"
           title="AI Chatbot"
-          className="ai-iframe"
+          className="w-full h-full border-none rounded-xl"
           frameBorder="0"
           inputMode="text"
           lang='fa'

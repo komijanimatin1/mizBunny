@@ -1,1 +1,1 @@
-export { default as InAppBrowserService } from './InAppBrowserService';
+export { InAppBrowserService, inAppBrowserService } from './InAppBrowserService';

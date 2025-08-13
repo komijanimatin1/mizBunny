@@ -2,7 +2,6 @@ import ServiceDetails from '../my-services/ServiceDetails';
 import ServicesSection from '../my-services/ServicesSection';
 import HorizontalScroll from '../ui/HorizontalScroll';
 import FacilitiesScroll from '../third-party/FacilitiesScroll';
-import './HomeElements.css';
 
 const facilities = {
     title: "لجستیک",
@@ -61,7 +60,7 @@ const financialServices = {
 
 const HomeElements = () => {
     return (
-        <div className="home-elements">
+        <div className="overflow-auto scrollbar-hide scroll-smooth bg-white w-full h-[90%] p-4 mt-10 rounded-2xl [&::-webkit-scrollbar]:hidden">
             <ServiceDetails />
             <ServicesSection />
             <HorizontalScroll />

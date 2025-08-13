@@ -15,12 +15,12 @@ export class InAppBrowserService {
           this.browserRef = window.cordova.InAppBrowser.open(url, target, options);
           
           // Add event listeners
-          this.browserRef.addEventListener('loadstart', () => {
-            console.log('InAppBrowser: Load started');
+          this.browserRef.addEventListener('loadstart', (e: any) => {
+            console.log('InAppBrowser: Load started', e && e.url);
           });
 
-          this.browserRef.addEventListener('loadstop', () => {
-            console.log('InAppBrowser: Load completed');
+          this.browserRef.addEventListener('loadstop', (e: any) => {
+            console.log('InAppBrowser: Load completed', e && e.url);
             resolve(this.browserRef);
           });
 
