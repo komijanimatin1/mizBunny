@@ -33,7 +33,7 @@ const ServicesSection = () => {
         </div>
       </div>
       {/* Additional Services - Three cards in a row */}
-      <div className="flex flex-row justify-between p-1.5 rounded-xl w-full">
+      <div className="flex flex-row justify-between rounded-xl w-full">
         <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://cazieh-front.linuxchi.ir/services/counseling', 'مشاوره')}>
           <Icon icon="fluent:person-support-32-filled" width={24} height={24} className="w-10 h-10 text-base mb-2" />
           <div className="text-xs">مشاوره</div>
