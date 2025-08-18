@@ -56,7 +56,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
     setModalState({ isOpen: false, url: '', title: '' });
     
     try {
-      await openBrowser(modalState.url, '_blank', `showurl=no,navigationbuttons=yes,backbutton=yes,toolbar=no,toolbarheight=80,toolbarcolor=#5d5d5d,fullscreen=yes,footer=yes,menu=yes,injectbutton=yes,hardwareback=yes,closebutton=yes,zoom=yes,footertitle=${modalState.title},closebuttoncolor=#5d5d5d,gestures=no`);
+      await openBrowser(modalState.url, '_blank', `showurl=no,navigationbuttons=yes,backbutton=yes,toolbar=no,toolbarheight=80,toolbarcolor=#5d5d5d,fullscreen=yes,footer=yes,menu=yes,hardwareback=yes,closebutton=yes,zoom=yes,footertitle=${modalState.title},closebuttoncolor=#5d5d5d,gestures=no`);
     } catch (err) {
       console.error('Failed to open:', err);
       // Modal is already closed, no need to handle error state

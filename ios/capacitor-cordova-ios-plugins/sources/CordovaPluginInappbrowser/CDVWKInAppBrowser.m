@@ -45,7 +45,7 @@
 
 #define    IAB_BRIDGE_NAME @"cordova_iab"
 
-#define    TOOLBAR_HEIGHT 120.0
+#define    TOOLBAR_HEIGHT 64.0
 #define    LOCATIONBAR_HEIGHT 21.0
 #define    FOOTER_HEIGHT ((TOOLBAR_HEIGHT) + (LOCATIONBAR_HEIGHT))
 
@@ -174,7 +174,9 @@ static CDVWKInAppBrowser* instance = nil;
         }
     }
     
-    [self.inAppBrowserViewController showLocationBar:browserOptions.location];
+    // Respect new showurl flag; fallback to existing location when unspecified
+    BOOL showUrl = browserOptions.showurl ? YES : browserOptions.location;
+    [self.inAppBrowserViewController showLocationBar:showUrl];
     [self.inAppBrowserViewController showToolBar:browserOptions.toolbar :browserOptions.toolbarposition];
     if (browserOptions.closebuttoncaption != nil || browserOptions.closebuttoncolor != nil) {
         [self.inAppBrowserViewController.closeButton setTitle:browserOptions.closebuttoncaption forState:UIControlStateNormal];
@@ -190,8 +192,13 @@ static CDVWKInAppBrowser* instance = nil;
         if (browserOptions.footertitle != nil) {
             self.inAppBrowserViewController.footerTitleLabel.text = browserOptions.footertitle;
         }
+        // Apply footer color if provided
+        if (browserOptions.footercolor != nil) {
+            self.inAppBrowserViewController.toolbar.barTintColor = [UIColor colorWithHexString:browserOptions.footercolor];
+        }
     } else {
-        self.inAppBrowserViewController.toolbar.hidden = YES;
+        // When footer is disabled, still show toolbar as a header bar for back button
+        self.inAppBrowserViewController.toolbar.hidden = !browserOptions.toolbar;
     }
     // Set Presentation Style
     UIModalPresentationStyle presentationStyle = UIModalPresentationFullScreen; // default
@@ -428,6 +435,17 @@ static CDVWKInAppBrowser* instance = nil;
     [self injectDeferredObject:[command argumentAtIndex:0] withWrapper:jsWrapper];
 }
 
+// Add method to inject mock message script for testing
+- (void)injectMockMessageScript:(CDVInvokedUrlCommand*)command
+{
+    NSString* mockScript = @"(function(){setTimeout(()=>{try{const mockMessage={origin:'mizBunnyApp',type:'login_success',data:{_id:'508216cd-4ddf-4036-a08d-6f1c8e05fe2b',username:'hamidqasemy',email:'ghasemi1992@gmail.com',name:'حمید',lastName:'قاسمی',phoneNumber:'09384328756',roles:['superAdmin'],refreshToken:'mock-refresh-token'}};console.log('[Mock] sending mock message',mockMessage);if(window.cordova&&window.cordova.exec){window.cordova.exec(null,null,'InAppBrowser','postMessage',[JSON.stringify(mockMessage)]);}else if(window.cordova_iab&&window.cordova_iab.postMessage){window.cordova_iab.postMessage(JSON.stringify(mockMessage));}else if(window.parent&&window.parent.postMessage){window.parent.postMessage(mockMessage,'*');}else if(window.dispatchEvent){const e=new MessageEvent('message',{data:mockMessage});window.dispatchEvent(e);}}catch(err){console.error('[Mock] failed to post message',err);}},5000);})();";
+    
+    [self evaluateJavaScript:mockScript];
+    
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)injectScriptFile:(CDVInvokedUrlCommand*)command
 {
     NSString* jsWrapper;
@@ -463,6 +481,10 @@ static CDVWKInAppBrowser* instance = nil;
     }
     [self injectDeferredObject:[command argumentAtIndex:0] withWrapper:jsWrapper];
 }
+
+
+
+
 
 - (BOOL)isValidCallbackId:(NSString *)callbackId
 {
@@ -733,8 +755,8 @@ BOOL isExiting = FALSE;
     CGRect webViewBounds = self.view.bounds;
     BOOL toolbarIsAtBottom = ![browserOptions.toolbarposition isEqualToString:kInAppBrowserToolbarBarPositionTop];
     
-    // Add top margin to avoid camera punch area (48pt equivalent - matches Android exactly)
-    CGFloat topMargin = 48.0;
+    // Add top margin to avoid camera punch area (minimal gap)
+    CGFloat topMargin = 0.0; // No top margin - eliminate gap
     webViewBounds.origin.y += topMargin;
     webViewBounds.size.height -= topMargin;
     
@@ -852,7 +874,8 @@ BOOL isExiting = FALSE;
     }
     [self.webView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     self.webView.allowsLinkPreview = NO;
-    self.webView.allowsBackForwardNavigationGestures = NO;
+    // Respect gestures and hardwareback flags (hardwareback is parity/no-op, but we also use it to block gestures)
+    self.webView.allowsBackForwardNavigationGestures = (browserOptions.gestures && browserOptions.hardwareback);
     
     [self.webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
     
@@ -879,11 +902,17 @@ BOOL isExiting = FALSE;
     self.spinner.userInteractionEnabled = NO;
     [self.spinner stopAnimating];
     
-    float toolbarY = toolbarIsAtBottom ? self.view.bounds.size.height - TOOLBAR_HEIGHT : 0.0;
-    CGRect toolbarFrame = CGRectMake(0.0, toolbarY, self.view.bounds.size.width, TOOLBAR_HEIGHT);
+    CGFloat resolvedToolbarHeight = (browserOptions.toolbarheight != nil) ? [browserOptions.toolbarheight floatValue] : TOOLBAR_HEIGHT;
+    float toolbarY = toolbarIsAtBottom ? self.view.bounds.size.height - resolvedToolbarHeight : 0.0;
+    CGRect toolbarFrame = CGRectMake(0.0, toolbarY, self.view.bounds.size.width, resolvedToolbarHeight);
 
     self.toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
-    self.toolbar.barTintColor = [UIColor colorWithHexString:@"#F2F2F2"];
+    // Apply toolbar color if provided
+    if (browserOptions.toolbarcolor != nil) {
+        self.toolbar.barTintColor = [UIColor colorWithHexString:browserOptions.toolbarcolor];
+    } else {
+        self.toolbar.barTintColor = [UIColor colorWithHexString:@"#F2F2F2"];
+    }
     self.toolbar.autoresizingMask = toolbarIsAtBottom ? (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin) : UIViewAutoresizingFlexibleWidth;
     
     // Remove default iOS toolbar styling to eliminate dark lines
@@ -933,7 +962,7 @@ BOOL isExiting = FALSE;
     [self.AIButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.AIButton.layer.cornerRadius = 8.0f;
     self.AIButton.layer.masksToBounds = YES;
-    self.AIButton.contentEdgeInsets = UIEdgeInsetsMake(12, 16, 12, 16); // Match Android padding exactly
+            self.AIButton.contentEdgeInsets = UIEdgeInsetsMake(8, 12, 8, 12); // tighter padding
     self.AIButton.titleLabel.font = [UIFont systemFontOfSize:14.0]; // Match Android text size exactly
     [self.AIButton setTitle:@"AI" forState:UIControlStateNormal];
     [self.AIButton addTarget:self action:@selector(injectScript) forControlEvents:UIControlEventTouchUpInside];
@@ -947,7 +976,7 @@ BOOL isExiting = FALSE;
     [self.menuButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.menuButton.layer.cornerRadius = 8.0f;
     self.menuButton.layer.masksToBounds = YES;
-    self.menuButton.contentEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12); // Match Android padding exactly
+            self.menuButton.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8); // tighter padding
     self.menuButton.titleLabel.font = [UIFont systemFontOfSize:14.0]; // Match Android text size exactly
     [self.menuButton setTitle:@"⋮" forState:UIControlStateNormal]; // Three dots
     [self.menuButton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
@@ -961,39 +990,50 @@ BOOL isExiting = FALSE;
     self.footerTitleLabel.font = [UIFont systemFontOfSize:28.0]; // Match Android text size exactly
     [self.toolbar addSubview:self.footerTitleLabel];
 
-    self.closeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.closeButton.backgroundColor = [UIColor colorWithHexString:@"#F0F0F0"]; // Light gray to match Android
-    self.closeButton.layer.cornerRadius = 8.0f;
-    self.closeButton.layer.masksToBounds = YES;
-    self.closeButton.contentEdgeInsets = UIEdgeInsetsMake(12, 16, 12, 16);
-    
-    // Use right arrow icon like Android instead of text
-    UIImage *rightArrowImage = [UIImage systemImageNamed:@"chevron.right"];
-    if (rightArrowImage == nil) {
-        // Fallback for older iOS versions
-        rightArrowImage = [UIImage imageNamed:@"arrow_right"];
-    }
-    if (rightArrowImage != nil) {
-        [self.closeButton setImage:rightArrowImage forState:UIControlStateNormal];
-        self.closeButton.tintColor = [UIColor blackColor];
-        // Remove title since we're using image
-        [self.closeButton setTitle:nil forState:UIControlStateNormal];
+    // Honor backbutton flag (default YES)
+    if (!browserOptions.backbutton) {
+        self.closeButton = nil;
     } else {
-        // Fallback to text if no image available
-        [self.closeButton setTitle:@"Close" forState:UIControlStateNormal];
-        [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        self.closeButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+        self.closeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.closeButton.backgroundColor = [UIColor colorWithHexString:@"#F0F0F0"]; // Light gray to match Android
+        self.closeButton.layer.cornerRadius = 8.0f;
+        self.closeButton.layer.masksToBounds = YES;
+        self.closeButton.contentEdgeInsets = UIEdgeInsetsMake(6, 12, 6, 12);
+        
+        // Use right arrow icon like Android and also allow caption
+        UIImage *rightArrowImage = [UIImage systemImageNamed:@"chevron.right"];
+        if (rightArrowImage == nil) {
+            // Fallback for older iOS versions
+            rightArrowImage = [UIImage imageNamed:@"arrow_right"];
+        }
+        if (rightArrowImage != nil) {
+            [self.closeButton setImage:rightArrowImage forState:UIControlStateNormal];
+            self.closeButton.tintColor = [UIColor blackColor];
+        }
+        
+        // If a caption was provided, show it with proper spacing
+        if (browserOptions.closebuttoncaption != nil && browserOptions.closebuttoncaption.length > 0) {
+            [self.closeButton setTitle:browserOptions.closebuttoncaption forState:UIControlStateNormal];
+            [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            self.closeButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+            
+            // Add proper spacing between image and text
+            [self.closeButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8.0)]; // Right margin for image
+            [self.closeButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 8.0, 0, 0)]; // Left margin for title
+        }
+        
+        [self.closeButton addTarget:self action:@selector(closeOrGoBack) forControlEvents:UIControlEventTouchUpInside];
+        [self.closeButton addTarget:self action:@selector(buttonTouchDown:) forControlEvents:UIControlEventTouchDown];
+        [self.closeButton addTarget:self action:@selector(buttonTouchUp:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+        [self.toolbar addSubview:self.closeButton];
+        
+        // Initialize close button title
+        [self updateCloseButtonTitle];
     }
-    
-    [self.closeButton addTarget:self action:@selector(closeOrGoBack) forControlEvents:UIControlEventTouchUpInside];
-    [self.closeButton addTarget:self action:@selector(buttonTouchDown:) forControlEvents:UIControlEventTouchDown];
-    [self.closeButton addTarget:self action:@selector(buttonTouchUp:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
-    [self.toolbar addSubview:self.closeButton];
-    
-    // Initialize close button title
-    [self updateCloseButtonTitle];
     
     [self.view addSubview:self.toolbar];
+    // Honor showurl flag; hide address label if false
+    self.addressLabel.hidden = !browserOptions.showurl;
     [self.view addSubview:self.addressLabel];
     [self.view addSubview:self.spinner];
 }
@@ -1102,6 +1142,12 @@ BOOL isExiting = FALSE;
 {
     CGRect toolbarFrame = self.toolbar.frame;
     CGRect locationbarFrame = self.addressLabel.frame;
+    
+    // Honor showurl flag by treating it as location bar visibility
+    BOOL showUrlFlag = browserOptions.showurl;
+    if (showUrlFlag != !(self.addressLabel.hidden)) {
+        [self showLocationBar:showUrlFlag];
+    }
     
     BOOL locationbarVisible = !self.addressLabel.hidden;
     
@@ -1248,6 +1294,8 @@ BOOL isExiting = FALSE;
 
 - (void)goBack:(id)sender
 {
+    // Emit toolbarback message for parity
+    [[CDVWKInAppBrowser getInstance] sendEvent:@"message" withData:@{ @"type": @"toolbarback" }];
     [self.webView goBack];
 }
 
@@ -1477,19 +1525,17 @@ BOOL isExiting = FALSE;
 }
 
 - (void)updateCloseButtonTitle {
-    // Since we're using arrow icon like Android, we don't need to update text
-    // The arrow icon represents both back and close functionality
-    // Just keep the same right arrow icon regardless of navigation state
+    // No dynamic text on iOS; keep icon. If needed, this is where we'd toggle title.
 }
 
 - (void)closeOrGoBack {
+    // Emit toolbarback message to host for parity with Android
+    [[CDVWKInAppBrowser getInstance] sendEvent:@"message" withData:@{ @"type": @"toolbarback" }];
+    
     // Check if we can go back
     if (self.webView.canGoBack) {
-        // Go back in WebView history
         [self.webView goBack];
-        // Navigation state will be updated in didFinishNavigation after the back navigation completes
     } else {
-        // Close the InAppBrowser
         [self close];
     }
 }
@@ -1534,7 +1580,7 @@ BOOL isExiting = FALSE;
 
 - (void) rePositionViews {
     CGFloat statusBarHeight = [self getStatusBarOffset];
-    CGFloat footerHeight = 120.0; // Match Android footer height exactly
+    CGFloat footerHeight = (browserOptions.footerheight != nil) ? [browserOptions.footerheight floatValue] : 120.0; // Allow override via option
     
     // Calculate the available height for the webView
     CGFloat availableHeight = self.view.bounds.size.height - statusBarHeight;
@@ -1584,11 +1630,13 @@ BOOL isExiting = FALSE;
         }
 
         // Position close button at far right with 16pt padding (matches Android)
-        [self.closeButton sizeToFit];
-        CGRect closeButtonFrame = self.closeButton.frame;
-        closeButtonFrame.origin.x = self.view.bounds.size.width - closeButtonFrame.size.width - 16;
-        closeButtonFrame.origin.y = (footerHeight - closeButtonFrame.size.height) / 2;
-        self.closeButton.frame = closeButtonFrame;
+        if (browserOptions.backbutton && self.closeButton != nil) {
+            [self.closeButton sizeToFit];
+            CGRect closeButtonFrame = self.closeButton.frame;
+            closeButtonFrame.origin.x = self.view.bounds.size.width - closeButtonFrame.size.width - 16;
+            closeButtonFrame.origin.y = (footerHeight - closeButtonFrame.size.height) / 2;
+            self.closeButton.frame = closeButtonFrame;
+        }
 
         // Position title in center with balanced spacing (matches Android layout exactly)
         // Android uses 16dp footer padding, so we use 16pt spacing from buttons
@@ -1598,7 +1646,8 @@ BOOL isExiting = FALSE;
         } else {
             titleLabelX = CGRectGetMaxX(aiButtonFrame) + 16; // 16pt spacing from left button (matches Android 16dp)
         }
-        CGFloat titleLabelWidth = CGRectGetMinX(closeButtonFrame) - titleLabelX - 16; // 16pt spacing from right button (matches Android 16dp)
+        CGFloat rightEdge = browserOptions.backbutton && self.closeButton != nil ? CGRectGetMinX(self.closeButton.frame) : self.view.bounds.size.width;
+        CGFloat titleLabelWidth = rightEdge - titleLabelX - 16; // 16pt spacing from right edge/button
         self.footerTitleLabel.frame = CGRectMake(titleLabelX, 0, titleLabelWidth, footerHeight);
         
     } else {
@@ -1614,14 +1663,15 @@ BOOL isExiting = FALSE;
         if ((browserOptions.toolbar) && ([browserOptions.toolbarposition isEqualToString:kInAppBrowserToolbarBarPositionTop])) {
             // if we have to display the toolbar on top of the web view, we need to account for its height
             viewBounds.origin.y += TOOLBAR_HEIGHT;
+            // Position toolbar directly below status bar (eliminate top gap)
             self.toolbar.frame = CGRectMake(self.toolbar.frame.origin.x, statusBarHeight, self.toolbar.frame.size.width, self.toolbar.frame.size.height);
         }
         
         // Apply 16pt margins to WebView container when footer is disabled
         viewBounds.origin.x += 16.0;
-        viewBounds.origin.y += 16.0;
+        viewBounds.origin.y += 0.0; // No gap between toolbar and web view
         viewBounds.size.width -= 32.0;
-        viewBounds.size.height -= 32.0;
+        viewBounds.size.height -= 0.0; // No height reduction - eliminate bottom gap
         
         // Find the WebView container and update its frame
         UIView *webViewContainer = nil;
@@ -1634,6 +1684,16 @@ BOOL isExiting = FALSE;
         
         if (webViewContainer) {
             webViewContainer.frame = viewBounds;
+        }
+
+        // Position close/back button in top toolbar when footer is disabled
+        if (browserOptions.toolbar && browserOptions.backbutton && self.closeButton != nil) {
+            [self.closeButton sizeToFit];
+            CGRect closeButtonFrame = self.closeButton.frame;
+            CGFloat padding = 16.0;
+            closeButtonFrame.origin.x = padding;
+            closeButtonFrame.origin.y = (self.toolbar.frame.size.height - closeButtonFrame.size.height) / 2.0;
+            self.closeButton.frame = closeButtonFrame;
         }
     }
 }

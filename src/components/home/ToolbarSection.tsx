@@ -143,7 +143,7 @@ const ToolbarSection: React.FC = () => {
   return (
     <div 
       ref={toolbarRef}
-      className="fixed bottom-4 left-4 right-4 z-[1000] bg-black flex justify-around items-center py-3 px-0 rounded-xl transition-all duration-300 ease-in-out keyboard-aware"
+      className="fixed bottom-4 left-4 right-4 z-[1000] bg-black flex justify-around items-center py-2 px-0 rounded-xl transition-all duration-300 ease-in-out keyboard-aware"
       style={{
         bottom: getBottomPosition(),
         // Use CSS custom property for dynamic viewport height fallback
@@ -165,7 +165,7 @@ const ToolbarSection: React.FC = () => {
       )}
       
       <div
-        className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-2 px-4 rounded-lg ${activeTab === 'home' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}
+        className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-1 px-4 rounded-lg ${activeTab === 'home' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}
         onClick={() => handleTabClick('home')}
       >
         <IonIcon
@@ -176,7 +176,7 @@ const ToolbarSection: React.FC = () => {
       </div>
 
       <div
-        className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-2 px-4 rounded-lg ${activeTab === 'profile' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}
+        className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-1 px-4 rounded-lg ${activeTab === 'profile' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}
         onClick={() => handleTabClick('profile')}
       >
         <IonIcon
@@ -187,7 +187,7 @@ const ToolbarSection: React.FC = () => {
       </div>
 
       <div
-        className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-2 px-4 rounded-lg ${activeTab === 'ai' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}
+        className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-1 px-4 rounded-lg ${activeTab === 'ai' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}
         onClick={() => handleTabClick('ai')}
       >
         <IonIcon
