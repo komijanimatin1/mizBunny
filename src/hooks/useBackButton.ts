@@ -1,36 +1,38 @@
 import { useEffect } from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
+import { PluginListenerHandle } from '@capacitor/core';
 import { useLocation, useHistory } from 'react-router-dom';
+import { inAppBrowserService } from '../services/InAppBrowserService';
 
 export const useBackButton = () => {
   const location = useLocation();
   const history = useHistory();
 
   useEffect(() => {
-    let backButtonListener: any;
+    let listener: PluginListenerHandle;
 
-    const setupBackButton = async () => {
-      const handleBackButton = () => {
-        // If we're on the home route, exit the app immediately
+    const addListener = async () => {
+      listener = await CapacitorApp.addListener('backButton', () => {
         if (location.pathname === '/home') {
           CapacitorApp.exitApp();
         } else {
-          // For other routes, navigate back to home
-          history.push('/home');
+          history.goBack();
         }
-      };
-
-      // Register the back button listener
-      backButtonListener = await CapacitorApp.addListener('backButton', handleBackButton);
+      });
     };
 
-    setupBackButton();
+    addListener();
 
-    // Cleanup function to remove the listener
     return () => {
-      if (backButtonListener && backButtonListener.remove) {
-        backButtonListener.remove();
+      if (listener) {
+        listener.remove();
       }
     };
   }, [location.pathname, history]);
+
+  const handleInAppBrowserBack = () => {
+    inAppBrowserService.close();
+  };
+
+  return { handleInAppBrowserBack };
 };

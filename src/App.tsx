@@ -1,52 +1,48 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { Redirect, Route, useLocation } from 'react-router-dom';
+import { IonApp, IonFooter, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { useState } from 'react';
 import Home from './pages/Home';
-import SplashScreen from './components/home/SplashScreen';
+import Splash from './pages/Splash';
 import AIPage from './pages/AIPage';
 import Profile from './pages/Profile';
 import ToolbarSection from './components/home/ToolbarSection';
+import { useAuthStore } from './stores/authStore';
 
 /* Theme variables */
 import './theme/variables.css';
 
 setupIonicReact();
 
+const AppContent: React.FC = () => {
+  const location = useLocation();
+  const showToolbar = location.pathname !== '/splash';
+  const { isAuthenticated, token } = useAuthStore();
+
+  return (
+    <>
+      <IonRouterOutlet>
+        <Route exact path="/splash" render={() => <Splash key={`splash-${isAuthenticated}-${token}`} />} />
+        <Route exact path="/home" render={() => (isAuthenticated || token ? <Home /> : <Redirect to="/splash" />)} />
+        <Route exact path="/ai" component={AIPage} />
+        <Route exact path="/profile" component={Profile} />
+        <Route exact path="/">
+          <Redirect to="/splash" />
+        </Route>
+      </IonRouterOutlet>
+      {showToolbar && (
+        <IonFooter>
+          <ToolbarSection />
+        </IonFooter>
+      )}
+    </>
+  );
+};
+
 const App: React.FC = () => {
-  const [showSplash, setShowSplash] = useState(true);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-  };
-
-  if (showSplash) {
-    return (
-      <IonApp>
-        <SplashScreen onComplete={handleSplashComplete} />
-      </IonApp>
-    );
-  }
-
   return (
     <IonApp>
       <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact path="/home">
-            <Home />
-          </Route>
-          <Route exact path="/ai">
-            <AIPage />
-          </Route>
-          <Route exact path="/profile">
-            <Profile />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
-        </IonRouterOutlet>
-        {/* Persistent custom toolbar over all routes */}
-        <ToolbarSection />
+        <AppContent />
       </IonReactRouter>
     </IonApp>
   );

@@ -22,3 +22,148 @@
 body {
   font-family: var(--font-family-primary);
 }
+
+/* Mobile keyboard handling utilities */
+@layer utilities {
+  /* Dynamic viewport height for better mobile support */
+  .h-dvh {
+    height: 100dvh;
+  }
+  
+  .min-h-dvh {
+    min-height: 100dvh;
+  }
+  
+  /* Safe area utilities */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Keyboard-aware positioning */
+  .keyboard-aware {
+    transition: bottom 0.3s ease-in-out;
+    /* Ensure smooth positioning changes */
+    will-change: bottom;
+  }
+  
+  /* Toolbar positioning utilities */
+  .toolbar-bottom {
+    bottom: env(safe-area-inset-bottom);
+  }
+  
+  .toolbar-keyboard {
+    /* Position above keyboard with smooth transition */
+    transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Fallback positioning for toolbar when keyboard appears */
+@supports (height: 100dvh) {
+  .keyboard-aware {
+    /* Use dynamic viewport height for better mobile support */
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Media query for devices with virtual keyboards */
+@media (max-height: 600px) and (orientation: portrait) {
+  .keyboard-aware {
+    /* When viewport height is reduced (keyboard visible), position toolbar at bottom of visible area */
+    bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Additional fallback for very small viewports */
+@media (max-height: 500px) {
+  .keyboard-aware {
+    /* Keep toolbar at bottom of very small viewports */
+    bottom: calc(0.25rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Ensure proper viewport handling on mobile */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Better touch handling for mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Enhanced iframe keyboard handling */
+.iframe-keyboard-aware {
+  /* Ensure smooth transitions */
+  transition: none; /* No transition for iframe itself */
+  /* Prevent any unwanted spacing */
+  margin: 0;
+  padding: 0;
+}
+
+/* Force iframe to eliminate blank space */
+iframe[title="AI Chatbot"] {
+  /* Ensure proper positioning */
+  position: absolute !important;
+  /* Prevent any default margins/padding */
+  margin: 0 !important;
+  padding: 0 !important;
+  /* No transitions for iframe */
+  transition: none !important;
+}
+
+/* When keyboard is visible, ensure iframe fills space perfectly */
+.keyboard-visible iframe {
+  /* Keep iframe in normal position */
+  transform: none !important;
+  /* Ensure proper stacking */
+  z-index: 1;
+}
+
+/* Prevent any blank space artifacts */
+.ai-chat-container {
+  /* Force container to stay in place */
+  position: relative !important;
+  /* Ensure proper overflow handling */
+  overflow: hidden !important;
+  /* Smooth transitions for container */
+  transition: transform 0.3s ease-in-out !important;
+}
+
+/* Additional iframe positioning fixes */
+.ai-chat-container iframe {
+  /* Force perfect positioning */
+  position: absolute !important;
+  /* No transitions for iframe */
+  transition: none !important;
+  /* Prevent any default browser spacing */
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Ensure proper stacking */
+  z-index: 1;
+}
+
+/* When keyboard is visible, perfect the container positioning */
+.keyboard-visible.ai-chat-container {
+  /* Force perfect overlay simulation */
+  transform-origin: bottom center !important;
+  /* Ensure smooth animation */
+  will-change: transform !important;
+  /* Force hardware acceleration */
+  backface-visibility: hidden;
+  /* Prevent any flickering */
+  -webkit-backface-visibility: hidden;
+}

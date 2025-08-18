@@ -19,6 +19,20 @@ export default {
           800: '#1e40af',
           900: '#1e3a8a',
         }
+      },
+      spacing: {
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
+      height: {
+        'dvh': '100dvh',
+        'screen-dvh': '100dvh',
+      },
+      minHeight: {
+        'dvh': '100dvh',
+        'screen-dvh': '100dvh',
       }
     },
   },

@@ -4,11 +4,9 @@ import { Icon } from '@iconify/react';
 const ServicesSection = () => {
   const { openBrowser } = useInAppBrowser();
 
-
-  //u can executeCode in the browser here!!!
   const handleServiceClick = async (url: string, title: string) => {
     try {
-      await openBrowser(url, '_blank', `location=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},menu=yes,hardwareback=yes,injectbutton=yes`);
+      await openBrowser(url, '_blank', `showurl=no,navigationbuttons=no,backbutton=no,location=no,toolbar=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},menu=yes,hardwareback=yes,injectbutton=yes`);
     } catch (err) {
       console.error('Failed to open:', err);
     }
