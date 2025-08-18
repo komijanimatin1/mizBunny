@@ -19,8 +19,8 @@ const Splash: React.FC = () => {
   const browserRef = useRef<any>(null);
   const listenerAttachedRef = useRef<boolean>(false);
 
-  const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
-
+  // const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
+  const LOGIN_URL = 'https://www.w3schools.com';
   const closeBrowserAndCleanup = () => {
     try {
       if (browserRef.current) {
@@ -58,15 +58,22 @@ const Splash: React.FC = () => {
       }
     }
 
+    // iOS IAB posts messages as { type: 'message', data: <payload> }
+    if (parsed && typeof parsed === 'object' && parsed.type === 'message' && parsed.data) {
+      parsed = parsed.data;
+    }
+
     console.log('[Splash] IAB message received:', parsed);
 
     if (parsed && typeof parsed === 'object') {
       if (parsed.type === 'toolbarback') {
+        console.log('[Splash] Toolbar back button pressed.');
         closeBrowserAndCleanup();
         return;
       }
 
       if (parsed.origin === 'mizBunnyApp') {
+        console.log('[Splash] Received message from mizBunnyApp origin.');
         const payload = parsed.data && typeof parsed.data === 'object' ? parsed.data : parsed;
 
         if (payload && (payload._id || payload.username || payload.email)) {
@@ -83,15 +90,17 @@ const Splash: React.FC = () => {
         };
         finishLogin(mockUser, 'mock-jwt-token-fallback');
       }
+    } else {
+      console.log('[Splash] Received message from unknown origin or invalid format:', parsed);
     }
   };
 
   const injectMockMessageScript = (iabRef: any) => {
-    if (!iabRef?.executeScript) return;
+    if (!iabRef?.executeScript && !iabRef?.injectScriptCode) return;
 
     const mockScript = `
       (function(){
-        setTimeout(() => {
+        function send(){
           try {
             const mockMessage = {
               origin: 'mizBunnyApp',
@@ -108,13 +117,13 @@ const Splash: React.FC = () => {
               }
             };
 
-            console.log('[Mock] sending mock message', mockMessage);
+            var payload = JSON.stringify(mockMessage);
 
-            if (window.cordova && window.cordova.exec) {
-              window.cordova.exec(null, null, 'InAppBrowser', 'postMessage', [JSON.stringify(mockMessage)]);
-            } else if (window.cordova_iab?.postMessage) {
-              window.cordova_iab.postMessage(JSON.stringify(mockMessage));
-            } else if (window.parent?.postMessage) {
+            if (window.cordova_iab && typeof window.cordova_iab.postMessage === 'function') {
+              window.cordova_iab.postMessage(payload);
+            } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.cordova_iab) {
+              window.webkit.messageHandlers.cordova_iab.postMessage(payload);
+            } else if (window.parent && typeof window.parent.postMessage === 'function') {
               window.parent.postMessage(mockMessage, '*');
             } else if (window.dispatchEvent) {
               const e = new MessageEvent('message', { data: mockMessage });
@@ -123,33 +132,68 @@ const Splash: React.FC = () => {
           } catch (err) {
             console.error('[Mock] failed to post message', err);
           }
-        }, 5000);
+        }
+        // send immediately and retry a couple of times to survive redirects
+        send();
+        setTimeout(send, 1000);
+        setTimeout(send, 3000);
       })();
     `;
 
     try {
-      iabRef.executeScript({ code: mockScript });
+      if (iabRef.executeScript) {
+        iabRef.executeScript({ code: mockScript });
+      } else if (iabRef.injectScriptCode) {
+        iabRef.injectScriptCode(mockScript);
+      }
       console.log('[Mock] injected script into IAB');
     } catch (err) {
       console.error('[Mock] injection error', err);
     }
   };
 
+  // helper to simulate mock message on web fallback
+  const postMockMessageToWindow = () => {
+    const mockMessage = {
+      origin: 'mizBunnyApp',
+      type: 'login_success',
+      data: {
+        _id: '508216cd-4ddf-4036-a08d-6f1c8e05fe2b',
+        username: 'hamidqasemy',
+        email: 'ghasemi1992@gmail.com',
+        name: 'حمید',
+        lastName: 'قاسمی',
+        phoneNumber: '09384328756',
+        roles: ['superAdmin'],
+        refreshToken: 'mock-refresh-token'
+      }
+    };
+    try {
+      window.postMessage(mockMessage, '*');
+      setTimeout(() => window.postMessage(mockMessage, '*'), 1000);
+      setTimeout(() => window.postMessage(mockMessage, '*'), 3000);
+      console.log('[Mock] posted mock message to window');
+    } catch (err) {
+      console.error('[Mock] failed to post mock message to window', err);
+    }
+  };
+
   const openLoginBrowser = async () => {
     try {
       const options = [
-        'location=no',
+        'location=yes',
         'toolbar=yes',
-        'toolbarcolor=#F0F0F0',
-        'backbutton=yes',
+        'toolbarposition=top',
         'footer=no',
-        'hideurlbar=yes',
-        'hardwareback=no',
-        'hidenavigationbuttons=yes',
-        'closebutton=no',
+        'backbutton=yes',
+        'hidenavigationbuttons=no',
+        'closebuttoncaption=بازگشت به صفحه اصلی',
+        'closebuttoncolor=#000000',
+        'toolbarcolor=#F0F0F0',
+        'showurl=no',
         'gestures=no',
-        'zoom=no',
-      ].join(',');
+        'zoom=no'
+      ].join(',')
 
       setIsFirstTime(false);
       browserRef.current = await openBrowser(LOGIN_URL, '_blank', options);
@@ -158,25 +202,37 @@ const Splash: React.FC = () => {
       if (browserRef.current?.addEventListener) {
         browserRef.current.addEventListener('message', handleMessage);
         listenerAttachedRef.current = true;
+        console.log('[Splash] Added "message" event listener to IAB.');
 
         const onPageLoad = (e: any) => {
           console.log('[Splash] Page loaded:', e?.url);
           injectMockMessageScript(browserRef.current);
-          browserRef.current.removeEventListener('loadstop', onPageLoad);
+          // Keep listening to loadstop to reinject after redirects/navigation
         };
 
         browserRef.current.addEventListener('loadstop', onPageLoad);
+        console.log('[Splash] Added "loadstop" event listener to IAB.');
+
+        // Inject immediately as well in case initial loadstop already fired before listener attached
+        injectMockMessageScript(browserRef.current);
 
         cleanupRef.current = () => {
           if (listenerAttachedRef.current && browserRef.current) {
             browserRef.current.removeEventListener?.('message', handleMessage);
+            console.log('[Splash] Removed "message" event listener from IAB.');
           }
           browserRef.current = null;
           listenerAttachedRef.current = false;
         };
       } else if (!isAvailable()) {
         window.addEventListener('message', handleMessage);
-        cleanupRef.current = () => window.removeEventListener('message', handleMessage);
+        console.log('[Splash] Added "message" event listener to window.');
+        cleanupRef.current = () => {
+          window.removeEventListener('message', handleMessage);
+          console.log('[Splash] Removed "message" event listener from window.');
+        };
+        // simulate a mock message on web fallback so login completes
+        postMockMessageToWindow();
       }
     } catch (e) {
       console.error('Failed to open login InAppBrowser', e);
