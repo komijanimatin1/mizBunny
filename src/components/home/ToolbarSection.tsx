@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { IonIcon, useIonRouter } from '@ionic/react';
 import { useLocation } from 'react-router-dom';
-import { Keyboard } from '@capacitor/keyboard';
 import {
   homeOutline,
   home,
@@ -16,8 +15,6 @@ type TabKey = 'ai' | 'profile' | 'home';
 const ToolbarSection: React.FC = () => {
   const router = useIonRouter();
   const { pathname } = useLocation();
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const activeTab: TabKey = pathname.startsWith('/ai')
@@ -28,94 +25,7 @@ const ToolbarSection: React.FC = () => {
 
   const prevTabRef = useRef<TabKey>(activeTab);
 
-  useEffect(() => {
-    prevTabRef.current = activeTab;
-  }, [activeTab]);
-
-  // Recalculate position when layout changes (orientation, resize, etc.)
-  useEffect(() => {
-    const handleLayoutChange = () => {
-      // Force re-render to recalculate position
-      setKeyboardHeight(prev => prev);
-    };
-
-    window.addEventListener('resize', handleLayoutChange);
-    window.addEventListener('orientationchange', handleLayoutChange);
-
-    return () => {
-      window.removeEventListener('resize', handleLayoutChange);
-      window.removeEventListener('orientationchange', handleLayoutChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Listen for keyboard events
-    let keyboardWillShow: any;
-    let keyboardWillHide: any;
-    let keyboardDidShow: any;
-    let keyboardDidHide: any;
-
-    const setupListeners = async () => {
-      try {
-        keyboardWillShow = await Keyboard.addListener('keyboardWillShow', (info) => {
-          setKeyboardHeight(info.keyboardHeight);
-          setIsKeyboardVisible(true);
-        });
-
-        keyboardWillHide = await Keyboard.addListener('keyboardWillHide', () => {
-          setKeyboardHeight(0);
-          setIsKeyboardVisible(false);
-        });
-
-        keyboardDidShow = await Keyboard.addListener('keyboardDidShow', (info) => {
-          setKeyboardHeight(info.keyboardHeight);
-          setIsKeyboardVisible(true);
-        });
-
-        keyboardDidHide = await Keyboard.addListener('keyboardDidHide', () => {
-          setKeyboardHeight(0);
-          setIsKeyboardVisible(false);
-        });
-      } catch (error) {
-        console.warn('Keyboard API not available, using CSS fallback:', error);
-        // Fallback: Use CSS-only approach for devices without Keyboard API
-        setIsKeyboardVisible(false);
-        setKeyboardHeight(0);
-      }
-    };
-
-    setupListeners();
-
-    // Additional fallback: Listen for viewport resize events
-    const handleResize = () => {
-      // If viewport height changes significantly, it might be due to keyboard
-      const currentHeight = window.innerHeight;
-      const previousHeight = (window as any).visualViewport?.height || currentHeight;
-      
-      if (Math.abs(currentHeight - previousHeight) > 150) {
-        // Significant height change, likely keyboard appeared/disappeared
-        setIsKeyboardVisible(currentHeight < previousHeight);
-        setKeyboardHeight(Math.abs(currentHeight - previousHeight));
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    if ((window as any).visualViewport) {
-      (window as any).visualViewport.addEventListener('resize', handleResize);
-    }
-
-    return () => {
-      if (keyboardWillShow) keyboardWillShow.remove();
-      if (keyboardWillHide) keyboardWillHide.remove();
-      if (keyboardDidShow) keyboardDidShow.remove();
-      if (keyboardDidHide) keyboardDidHide.remove();
-      
-      window.removeEventListener('resize', handleResize);
-      if ((window as any).visualViewport) {
-        (window as any).visualViewport.removeEventListener('resize', handleResize);
-      }
-    };
-  }, []);
+  prevTabRef.current = activeTab;
 
   const handleTabClick = (tab: TabKey) => {
     const target = tab === 'home' ? '/home' : `/${tab}`;
@@ -129,40 +39,14 @@ const ToolbarSection: React.FC = () => {
     router.push(target, direction);
   };
 
-  // Calculate bottom position based on keyboard state
-  const getBottomPosition = () => {
-    if (isKeyboardVisible && keyboardHeight > 0) {
-      // Hide toolbar below the keyboard by positioning it off-screen
-      // Move it down by the keyboard height plus some extra space
-      return `-${keyboardHeight + 100}px`;
-    }
-    // When keyboard is hidden, use normal positioning
-    return '1rem'; // equivalent to bottom-4
-  };
+  // No keyboard-driven positioning; rely on OS overlay behavior
 
   return (
     <div 
       ref={toolbarRef}
-      className="fixed bottom-4 left-4 right-4 z-[1000] bg-black flex justify-around items-center py-2 px-0 rounded-xl transition-all duration-300 ease-in-out keyboard-aware"
-      style={{
-        bottom: getBottomPosition(),
-        // Use CSS custom property for dynamic viewport height fallback
-        '--keyboard-height': `${keyboardHeight}px`,
-        // Ensure the toolbar stays above the keyboard on all devices
-        position: 'fixed' as const,
-        // Add safe area bottom padding for devices with home indicators
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        // Fallback positioning using CSS custom properties
-        '--fallback-bottom': '1rem',
-        '--dynamic-bottom': isKeyboardVisible && keyboardHeight > 0 ? `-${keyboardHeight + 100}px` : 'var(--fallback-bottom)'
-      } as React.CSSProperties}
+      className="fixed bottom-4 left-4 right-4 z-[1000] bg-black flex justify-around items-center py-2 px-0 rounded-xl transition-all duration-300 ease-in-out"
     >
-      {/* Debug indicator - remove this in production */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="absolute -top-8 left-0 right-0 text-xs text-white bg-red-500 px-2 py-1 rounded text-center">
-          KB: {isKeyboardVisible ? 'ON' : 'OFF'} | Height: {keyboardHeight}px | Hidden: {isKeyboardVisible ? 'YES' : 'NO'}
-        </div>
-      )}
+      
       
       <div
         className={`flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out py-1 px-4 rounded-lg ${activeTab === 'home' ? 'bg-white bg-opacity-15' : 'hover:bg-white hover:bg-opacity-10'}`}

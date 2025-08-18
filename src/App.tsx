@@ -11,7 +11,12 @@ import { useAuthStore } from './stores/authStore';
 /* Theme variables */
 import './theme/variables.css';
 
+import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
+
 setupIonicReact();
+
+// Ensure overlay keyboard behavior (no resize/pan)
+Keyboard.setResizeMode({ mode: KeyboardResize.None }).catch(() => {});
 
 const AppContent: React.FC = () => {
   const location = useLocation();
