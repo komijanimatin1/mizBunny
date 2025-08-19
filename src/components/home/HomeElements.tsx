@@ -60,7 +60,7 @@ const financialServices = {
 
 const HomeElements = () => {
     return (
-        <div className="overflow-auto scrollbar-hide scroll-smooth bg-white w-full h-[90%] p-4 mt-10 rounded-2xl [&::-webkit-scrollbar]:hidden">
+        <div className="overflow-auto scrollbar-hide scroll-smooth bg-white w-full h-[calc(100%-theme(spacing.14))] mt-14 p-4 rounded-2xl [&::-webkit-scrollbar]:hidden flex flex-col gap-4">
             <ServiceDetails />
             <ServicesSection />
             <HorizontalScroll />

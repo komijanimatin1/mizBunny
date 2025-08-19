@@ -13,7 +13,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     // Start logo animation after a small delay
     const logoTimer = setTimeout(() => {
       setLogoAnimation(true);
-    }, 100);
+    }, 50);
 
     // Start fade out after logo animation completes
     const fadeTimer = setTimeout(() => {
@@ -23,7 +23,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     // Complete the splash screen after fade out
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 2300); // 2.3 seconds total
+    }, 3000); // 2.3 seconds total
 
     return () => {
       clearTimeout(logoTimer);

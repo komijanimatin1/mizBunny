@@ -1,17 +1,49 @@
 {
     "logs": [
         {
-            "outputFile": "io.ionic.starter.app-mergeDebugResources-25:/values-v31/values-v31.xml",
+            "outputFile": "io.ionic.starter.app-mergeDebugResources-24:/values-v31/values-v31.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\ThinkBook\\.gradle\\caches\\8.11.1\\transforms\\ef234481c09f01fb9f0508a5da2b1126\\transformed\\core-splashscreen-1.0.1\\res\\values-v31\\values-v31.xml",
+                    "source": "C:\\Users\\ThinkBook\\Desktop\\mizBunny\\android\\app\\src\\main\\res\\values-v31\\styles.xml",
                     "from": {
-                        "startLines": "2,9",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,473",
-                        "endLines": "8,13",
-                        "endColumns": "12,12",
-                        "endOffsets": "468,697"
+                        "startLines": "4",
+                        "startColumns": "1",
+                        "startOffsets": "94",
+                        "endLines": "13",
+                        "endColumns": "9",
+                        "endOffsets": "740"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "11",
+                        "endColumns": "9",
+                        "endOffsets": "634"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-mergeDebugResources-24:\\values-v31\\values-v31.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\ThinkBook\\Desktop\\mizBunny\\android\\app\\src\\main\\res\\values-v31\\styles.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "1",
+                        "startOffsets": "134",
+                        "endLines": "14",
+                        "endColumns": "9",
+                        "endOffsets": "784"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "12",
+                        "endColumns": "9",
+                        "endOffsets": "649"
                     }
                 }
             ]

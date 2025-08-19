@@ -104,7 +104,7 @@ export default function HorizontalScroll() {
             }}
           >
             <div className="snippet-text">
-              <h3 className="snippet-title">{snippet.title}</h3>
+              <p className="snippet-title">{snippet.title}</p>
               <span className="snippet-cta">
                 {snippet.cta}
                 <Icon icon="fluent:chevron-left-24-filled" width="16" height="16" />

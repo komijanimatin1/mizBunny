@@ -24,7 +24,6 @@ MERGED from [:capacitor-cordova-android-plugins] C:\Users\ThinkBook\Desktop\mizB
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\16884767c054ac4cab0f70a5a4855d4d\transformed\appcompat-resources-1.7.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\dda665aa4a1576cfb1759fb2bbcd5279\transformed\appcompat-1.7.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\75881b531e34911967ea794bd3408c30\transformed\coordinatorlayout-1.2.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\ef234481c09f01fb9f0508a5da2b1126\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.fragment:fragment:1.8.4] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\7a4193c6fbbe5e128015b7f6283124c0\transformed\fragment-1.8.4\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.activity:activity:1.9.2] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\b5af023aa879967c1b3537c24628d5a4\transformed\activity-1.9.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\60fa4356081104865d164e2dc1a44707\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -153,8 +152,6 @@ MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\ThinkBook\.gradle\cach
 MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\dda665aa4a1576cfb1759fb2bbcd5279\transformed\appcompat-1.7.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\75881b531e34911967ea794bd3408c30\transformed\coordinatorlayout-1.2.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\75881b531e34911967ea794bd3408c30\transformed\coordinatorlayout-1.2.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\ef234481c09f01fb9f0508a5da2b1126\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\ef234481c09f01fb9f0508a5da2b1126\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.8.4] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\7a4193c6fbbe5e128015b7f6283124c0\transformed\fragment-1.8.4\AndroidManifest.xml:5:5-44
 MERGED from [androidx.fragment:fragment:1.8.4] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\7a4193c6fbbe5e128015b7f6283124c0\transformed\fragment-1.8.4\AndroidManifest.xml:5:5-44
 MERGED from [androidx.activity:activity:1.9.2] C:\Users\ThinkBook\.gradle\caches\8.11.1\transforms\b5af023aa879967c1b3537c24628d5a4\transformed\activity-1.9.2\AndroidManifest.xml:20:5-44

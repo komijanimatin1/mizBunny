@@ -6,16 +6,27 @@ export class InAppBrowserService {
       try {
         if (typeof window !== 'undefined' && window.cordova && window.cordova.InAppBrowser) {
           this.browserRef = window.cordova.InAppBrowser.open(url, target, options);
-          
-          this.browserRef.addEventListener('exit', () => {
-            console.log('InAppBrowser: Browser closed');
-            this.browserRef = null;
-          });
+          // Resolve immediately so callers can attach listeners (e.g., 'message')
+          // before any early events (like toolbar back) are fired.
+          resolve(this.browserRef);
 
-          this.browserRef.addEventListener('loadstop', (e: any) => {
-            console.log('InAppBrowser: Load completed', e && e.url);
-            resolve(this.browserRef);
-          });
+          // Keep useful listeners for logging/cleanup
+          try {
+            this.browserRef.addEventListener('exit', () => {
+              console.log('InAppBrowser: Browser closed');
+              this.browserRef = null;
+            });
+          } catch {
+            /* no-op */
+          }
+
+          try {
+            this.browserRef.addEventListener('loadstop', (e: any) => {
+              console.log('InAppBrowser: Load completed', e && e.url);
+            });
+          } catch {
+            /* no-op */
+          }
           
         } else {
           console.warn('InAppBrowser not available, opening in new tab');

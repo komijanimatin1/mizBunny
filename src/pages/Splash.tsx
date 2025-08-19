@@ -6,6 +6,7 @@ import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import { useAuthStore } from '../stores/authStore';
 
 const Splash: React.FC = () => {
+  const ENABLE_MOCK_LOGIN = true; // set to false when integrating with real login page emitting messages
   const [logoAnimation, setLogoAnimation] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeAnimation, setWelcomeAnimation] = useState(false);
@@ -18,6 +19,8 @@ const Splash: React.FC = () => {
   const cleanupRef = useRef<() => void>(() => {});
   const browserRef = useRef<any>(null);
   const listenerAttachedRef = useRef<boolean>(false);
+  const injectTimeoutRef = useRef<any>(null);
+  const injectedOnceRef = useRef<boolean>(false);
 
   // const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
   const LOGIN_URL = 'https://www.w3schools.com';
@@ -30,6 +33,12 @@ const Splash: React.FC = () => {
     } catch (e) {
       console.error('Error closing browser:', e);
     } finally {
+      // clear any pending mock injection timers
+      if (injectTimeoutRef.current) {
+        clearTimeout(injectTimeoutRef.current);
+        injectTimeoutRef.current = null;
+      }
+      injectedOnceRef.current = false;
       setIsWebViewOpen(false);
     }
   };
@@ -40,10 +49,7 @@ const Splash: React.FC = () => {
     } catch {}
     login(userData, authToken);
     setSuccessfulLogin(true);
-    setShowWelcome(true);
-    setTimeout(() => setWelcomeAnimation(true), 20);
     closeBrowserAndCleanup();
-    setTimeout(() => history.replace('/home'), 1000);
   };
 
   const handleMessage = (event: any) => {
@@ -100,6 +106,8 @@ const Splash: React.FC = () => {
 
     const mockScript = `
       (function(){
+        if (window.__mizbunnyMockInjected) { return; }
+        window.__mizbunnyMockInjected = true;
         function send(){
           try {
             const mockMessage = {
@@ -133,9 +141,7 @@ const Splash: React.FC = () => {
             console.error('[Mock] failed to post message', err);
           }
         }
-        // send immediately and retry a couple of times to survive redirects
-        send();
-        setTimeout(send, 1000);
+        // send once after 3 seconds
         setTimeout(send, 3000);
       })();
     `;
@@ -147,10 +153,22 @@ const Splash: React.FC = () => {
         iabRef.injectScriptCode(mockScript);
       }
       console.log('[Mock] injected script into IAB');
+      injectedOnceRef.current = true;
     } catch (err) {
       console.error('[Mock] injection error', err);
     }
   };
+
+  // const shouldInjectForUrl = (url: string | undefined | null) => {
+  //   if (!url) return false;
+  //   try {
+  //     const u = new URL(url);
+  //     // Only inject on our login domain or when explicitly requested via flag
+  //     return ENABLE_MOCK_LOGIN || u.hostname.endsWith('mizbunny.com') || u.searchParams.has('isLauncherLogin');
+  //   } catch {
+  //     return false;
+  //   }
+  // };
 
   // helper to simulate mock message on web fallback
   const postMockMessageToWindow = () => {
@@ -206,23 +224,50 @@ const Splash: React.FC = () => {
 
         const onPageLoad = (e: any) => {
           console.log('[Splash] Page loaded:', e?.url);
-          injectMockMessageScript(browserRef.current);
+          if (ENABLE_MOCK_LOGIN && !injectedOnceRef.current) {
+            injectMockMessageScript(browserRef.current);
+          }
           // Keep listening to loadstop to reinject after redirects/navigation
         };
 
         browserRef.current.addEventListener('loadstop', onPageLoad);
         console.log('[Splash] Added "loadstop" event listener to IAB.');
 
-        // Inject immediately as well in case initial loadstop already fired before listener attached
-        injectMockMessageScript(browserRef.current);
+        const onBrowserExit = () => {
+          console.log('[Splash] InAppBrowser exit/back detected.');
+          closeBrowserAndCleanup();
+        };
+
+        // Ensure closing or back in IAB brings user back to Splash with Retry option
+        browserRef.current.addEventListener?.('exit', onBrowserExit);
+        browserRef.current.addEventListener?.('backbutton', onBrowserExit);
+
+        // Schedule a one-shot mock injection 3 seconds after opening (regardless of site)
+        if (ENABLE_MOCK_LOGIN && !injectedOnceRef.current) {
+          injectTimeoutRef.current = setTimeout(() => {
+            if (!injectedOnceRef.current && browserRef.current) {
+              injectMockMessageScript(browserRef.current);
+            }
+          }, 3000);
+        }
 
         cleanupRef.current = () => {
           if (listenerAttachedRef.current && browserRef.current) {
             browserRef.current.removeEventListener?.('message', handleMessage);
             console.log('[Splash] Removed "message" event listener from IAB.');
           }
+          try {
+            browserRef.current?.removeEventListener?.('loadstop', onPageLoad);
+            browserRef.current?.removeEventListener?.('exit', onBrowserExit);
+            browserRef.current?.removeEventListener?.('backbutton', onBrowserExit);
+          } catch {}
+          if (injectTimeoutRef.current) {
+            clearTimeout(injectTimeoutRef.current);
+            injectTimeoutRef.current = null;
+          }
           browserRef.current = null;
           listenerAttachedRef.current = false;
+          injectedOnceRef.current = false;
         };
       } else if (!isAvailable()) {
         window.addEventListener('message', handleMessage);
@@ -255,7 +300,6 @@ const Splash: React.FC = () => {
 
   // Drive login flow based on auth state
   useEffect(() => {
-    if (successfulLogin) return; // finishLogin already handles welcome + nav
     if (isAuthenticated || token) {
       const welcomeTimer = setTimeout(() => {
         setShowWelcome(true);
@@ -273,7 +317,7 @@ const Splash: React.FC = () => {
       }, 1000);
       return () => clearTimeout(openTimer);
     }
-  }, [isAuthenticated, token, successfulLogin]);
+  }, [isAuthenticated, token]);
 
   // Reset splash states when auth state changes (e.g., after logout)
   useEffect(() => {
@@ -322,7 +366,7 @@ const Splash: React.FC = () => {
           </div>
           {/* Welcome message after successful login or when already authenticated */}
           {showWelcome && (
-            <div className={`absolute bottom-40 transition-all duration-1000 ease-out ${
+            <div className={`absolute bottom-40 transition-all duration-1000 ease-out antialiased ${
               welcomeAnimation ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
             }`}>
               <span className="text-xl">به میزبانی خوش آمدید</span>

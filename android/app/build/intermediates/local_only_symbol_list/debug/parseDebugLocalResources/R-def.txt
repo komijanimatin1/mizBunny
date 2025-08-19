@@ -11,6 +11,7 @@ drawable more
 drawable room_logo
 drawable room_logo_monochrome
 drawable splash
+drawable splash_noop
 layout activity_main
 mipmap ic_launcher
 mipmap ic_launcher_foreground

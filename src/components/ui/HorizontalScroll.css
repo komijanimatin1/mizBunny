@@ -5,30 +5,38 @@
   /* padding: 10px; */
   margin-top: 10px;
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
   gap: 8px;
 }
 
 .horizontal-scroll {
   display: flex;
-  flex-direction: row; /* آیتم‌ها افقی کنار هم */
-  overflow-x: auto; /* اسکرول افقی فعال */
+  flex-direction: row;
+  /* آیتم‌ها افقی کنار هم */
+  overflow-x: auto;
+  /* اسکرول افقی فعال */
   overflow-y: hidden;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* برای فایرفاکس */
-  -ms-overflow-style: none; /* برای IE */
+  scrollbar-width: none;
+  /* برای فایرفاکس */
+  -ms-overflow-style: none;
+  /* برای IE */
   gap: 8px;
-  direction: rtl; /* Ensure RTL regardless of page dir */
+  direction: rtl;
+  /* Ensure RTL regardless of page dir */
   scroll-snap-type: x mandatory;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
-  display: none; /* برای کروم */
+  display: none;
+  /* برای کروم */
 }
 
 .snippet-card {
-  width: 100%; /* ← بسیار مهم */
-  flex-shrink: 0; /* ← نذار کارت جمع بشه */
+  width: 100%;
+  /* ← بسیار مهم */
+  flex-shrink: 0;
+  /* ← نذار کارت جمع بشه */
   box-sizing: border-box;
   border-radius: 12px;
   padding: 16px;
@@ -40,28 +48,31 @@
 }
 
 
-.snippet-text{
+.snippet-text {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.snippet-title{
+.snippet-title {
   margin: 0;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.snippet-cta{
+.snippet-cta {
   border-radius: 8px;
   padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;  
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
 }
 
-.horizontal-scroll-dots{
+.horizontal-scroll-dots {
   display: flex;
   flex-direction: row;
   justify-content: center;
