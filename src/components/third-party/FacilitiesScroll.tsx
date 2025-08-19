@@ -75,7 +75,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
   return (
     <div className="w-full">
       <div className="text-right rtl">
-        <h2 className="text-lg font-semibold m-0 text-[#1f2937]">{facilities.title}</h2>
+        <span className="text-lg font-bold text-14px mb-3 text-[#1f2937]">{facilities.title}</span>
       </div>
       
       <div 

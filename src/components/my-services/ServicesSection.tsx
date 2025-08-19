@@ -20,7 +20,7 @@ const ServicesSection = () => {
     <div className="w-full mt-2.5">
       {/* Services Title */}
       <div className="text-right mb-2.5 relative">
-        <h2 className="text-xl font-bold text-[#333] m-0 inline-block bg-transparent px-2.5 relative z-10">خدمات</h2>
+        <span className="text-14px font-bold text-14px mb-3 text-[#1f2937]">خدمات</span>
       </div>
       
       {/* Main Services - Two cards side by side */}
@@ -37,11 +37,11 @@ const ServicesSection = () => {
       {/* Additional Services - Three cards in a row */}
       <div className="flex flex-row justify-between rounded-xl w-full">
         <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://cazieh-front.linuxchi.ir/services/counseling', 'مشاوره')}>
-          <Icon icon="fluent:person-support-32-filled" width={24} height={24} className="w-10 h-10 text-base mb-2" />
+          <Icon icon="fluent:person-support-32-filled" width={20} height={20} className="w-10 h-10 text-base mb-2" />
           <div className="text-xs">مشاوره</div>
         </div>
         <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://cazieh-front.linuxchi.ir/services/course', 'آموزش')}>
-          <Icon icon="fluent:chart-person-48-filled" width={24} height={24} />
+          <Icon icon="fluent:chart-person-48-filled" width={20} height={20} />
           <div className="text-xs">آموزش</div>
         </div>
         <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://cazieh-front.linuxchi.ir/services/event', 'رویداد')}>
