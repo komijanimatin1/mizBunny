@@ -59,7 +59,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
       await openBrowser(
         modalState.url,
         '_blank',
-        `showurl=no,navigationbuttons=yes,backbutton=yes,toolbar=no,toolbarheight=80,toolbarcolor=#5d5d5d,fullscreen=yes,footer=yes,menu=yes,hardwareback=yes,closebutton=yes,zoom=yes,footertitle=${modalState.title},footercolor=#F0F0F0,closebuttoncolor=#5d5d5d,gestures=no,footerheight=86`
+        `showurl=no,navigationbuttons=yes,backbutton=yes,toolbar=no,toolbarheight=80,toolbarcolor=#5d5d5d,fullscreen=yes,footer=yes,menu=yes,hardwareback=yes,closebutton=yes,zoom=no,footertitle=${modalState.title},footercolor=#F0F0F0,closebuttoncolor=#5d5d5d,gestures=no,footerheight=86`
       );
     } catch (err) {
       console.error('Failed to open:', err);

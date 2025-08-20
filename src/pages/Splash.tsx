@@ -363,6 +363,19 @@ const Splash: React.FC = () => {
               alt="اتاق ديجيتال" 
               className="max-w-[200px] h-auto block md:max-w-[150px] sm:max-w-[120px]"
             />
+            {/* Retry button positioned below the logo */}
+            {!isFirstTime && !successfulLogin && !isWebViewOpen && (
+              <div className="mt-8">
+                <IonButton
+                  onClick={handleRetry}
+                  fill="clear"
+                  className="bg-white text-black rounded-lg font-medium"
+                  style={{ border: '2px solid black' }}
+                >
+                  ورود مجدد
+                </IonButton>
+              </div>
+            )}
           </div>
           {/* Welcome message after successful login or when already authenticated */}
           {showWelcome && (
@@ -370,19 +383,6 @@ const Splash: React.FC = () => {
               welcomeAnimation ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
             }`}>
               <span className="text-xl">به میزبانی خوش آمدید</span>
-            </div>
-          )}
-          {/* Retry button when user backed out without login */}
-          {!isFirstTime && !successfulLogin && !isWebViewOpen && (
-            <div className="absolute bottom-20">
-              <IonButton
-                onClick={handleRetry}
-                fill="clear"
-                className="text-red-500 hover:text-red-600 flex items-center gap-2"
-              >
-                <Icon icon="fluent:arrow-enter-16-regular" width="16" height="16" />
-                تلاش مجدد
-              </IonButton>
             </div>
           )}
         </div>
