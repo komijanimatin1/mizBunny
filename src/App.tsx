@@ -12,6 +12,8 @@ import { useAuthStore } from './stores/authStore';
 import './theme/variables.css';
 
 import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { useEffect } from 'react';
 
 setupIonicReact();
 
@@ -22,6 +24,16 @@ const AppContent: React.FC = () => {
   const location = useLocation();
   const showToolbar = location.pathname !== '/splash';
   const { isAuthenticated, token } = useAuthStore();
+
+  // Prevent content under status bar and match platform backgrounds
+  useEffect(() => {
+    (async () => {
+      try {
+        await StatusBar.setOverlaysWebView({ overlay: true });
+      } catch {}
+      // style adjustments optional
+    })();
+  }, []);
 
   return (
     <>
@@ -35,7 +47,7 @@ const AppContent: React.FC = () => {
         </Route>
       </IonRouterOutlet>
       {showToolbar && (
-        <IonFooter>
+        <IonFooter className="footer-safe">
           <ToolbarSection />
         </IonFooter>
       )}

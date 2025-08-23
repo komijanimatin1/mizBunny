@@ -25,7 +25,7 @@ const Profile: React.FC = () => {
       <IonPage>
         <IonContent fullscreen>
           <div className="w-full h-full bg-[#E0E0E0] p-4 text-lg text-[#333]">
-            <div className="bg-white w-full h-[calc(100%-theme(spacing.14))] mt-14 p-4 rounded-2xl flex items-center justify-center">
+            <div className="bg-white w-full h-[calc(100%-theme(spacing.14))] p-4 rounded-2xl flex items-center justify-center pb-28">
               <div className="text-xl font-semibold text-[#666]">برای مشاهده پروفایل وارد شوید</div>
             </div>
           </div>
@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
     <IonPage>
       <IonContent fullscreen>
         <div className="w-full h-full bg-[#E0E0E0] p-4 pb-28 text-lg text-[#333]">
-          <div className="bg-white w-full h-[calc(100%-theme(spacing.14))] mt-14 pt-0 px-4 pb-4 rounded-2xl overflow-auto [&::-webkit-scrollbar]:hidden flex flex-col gap-4">
+          <div className="bg-white w-full h-[calc(100%-theme(spacing.14))] pt-0 px-4 pb-4 rounded-2xl overflow-auto [&::-webkit-scrollbar]:hidden flex flex-col gap-4 pb-28">
             <UserDetails />
             <ProfileMenu onLogout={handleLogout} />
           </div>

@@ -111,7 +111,7 @@ export default function HorizontalScroll() {
               </span>
             </div>
             <div className="snippet-illustration">
-              <img src="/wireframe.svg" width={96} height={96} />
+              <img src="/wireframe.svg" width={64} height={64} />
             </div>
           </div>
         ))}

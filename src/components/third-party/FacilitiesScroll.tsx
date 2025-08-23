@@ -74,35 +74,52 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
 
   return (
     <div className="w-full">
-      <div className="text-right rtl">
-        <span className="text-lg font-bold text-14px mb-3 text-[#1f2937]">{facilities.title}</span>
+
+      {/* title of facilities */}
+      <div className="text-right rtl mb-3">
+        <span className="text-sm font-semibold mb-3 text-[#1f2937]">{facilities.title}</span>
       </div>
       
       <div 
-        className="flex overflow-x-auto scrollbar-hide scroll-smooth gap-2.5 pl-4 [&::-webkit-scrollbar]:hidden"
+        className="flex overflow-x-scroll scrollbar-hide scroll-smooth gap-2.5 pl-4 [&::-webkit-scrollbar]:hidden w-full"
         ref={scrollRef}
       >
         {facilities.facilities.map((facility: any) => (
-                  <div 
-          key={facility.id} 
-                     className="flex-none w-[calc(50%-8px)] h-30 md:h-30 bg-white rounded-xl p-4 md:p-4 flex items-center shadow-md border border-[#e5e7eb]"
-          style={{ backgroundColor: facility.color }}
-        >
-            <div className="flex items-center justify-center w-full h-full" onClick={() => handleItemClick(facility.url, facility.title)}>
-              <div className="flex-shrink-0 w-20 h-20 rounded-xl flex items-center justify-center bg-transparent relative">
+          <div 
+            key={facility.id} 
+            className="flex-col w-[136px] min-w-[136px] max-w-[136px] flex-shrink-0 rounded-xl flex items-center cursor-pointer hover:scale-105 transition-all duration-300"
+          >
+            {/* Color box with icon */}
+            <div 
+              className="w-full h-16 md:h-30 rounded-xl mb-1.5 flex items-center justify-center"
+              style={{ backgroundColor: facility.color }}
+              onClick={() => handleItemClick(facility.url, facility.title)}
+            >
+              <div className="flex-shrink-0 w-20 h-20 rounded-xl flex items-center justify-center relative">
                 <img 
                   src={facility.icon} 
                   alt={facility.title}
-                  className="w-15 h-15 object-contain rounded-lg"
+                  className=" h-8 object-contain rounded-lg"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                     target.nextElementSibling?.classList.remove('hidden');
                   }}
                 />
-                <div className="w-10 h-10 bg-[#3b82f6] text-white rounded-lg flex items-center justify-center font-semibold text-lg hidden">
-                  {facility.title.charAt(0)}
-                </div>
+              </div>
+            </div>
+            
+            {/* Facility details */}
+            <div className="flex flex-col gap-1 w-full">
+              <div
+                className="text-[#000000] text-[14px] font-medium leading-normal"
+              >
+                {facility.title}
+              </div>
+              <div 
+                className="text-[#454545] text-[12px] font-medium leading-normal"
+              >
+                {facility.details}
               </div>
             </div>
           </div>

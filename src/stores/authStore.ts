@@ -14,6 +14,7 @@ export interface UserProfile {
   phoneNumber?: string;
   position?: string;
   email?: string;
+  avatar?: string;
 }
 
 interface AuthState {
