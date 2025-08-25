@@ -2,23 +2,92 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IonPage, IonContent } from '@ionic/react';
 import { useInAppBrowser } from '../hooks/useInAppBrowser';
+import ProgressBar from 'progressbar.js';
 
-// Custom CSS Spinner Component
-const CustomSpinner: React.FC<{ color: string; loading: boolean }> = ({ color, loading }) => {
-  if (!loading) return null;
-  
-  // Make the color more vibrant
-  const vibrantColor = color;
-  
-  return (
-    <div className="w-32 h-32 border-4 border-gray-200 border-t-current rounded-full animate-spin"
-      style={{ 
-        borderTopColor: vibrantColor,
-        borderWidth: '4px'
-      }}
-    />
-  );
+// Progress circle using progressbar.js
+const ProgressCircle: React.FC<{ color: string; loading: boolean }> = ({ color, loading }) => {
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const barRef = React.useRef<any>(null);
+  const rafRef = React.useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    if (!barRef.current) {
+      barRef.current = new (ProgressBar as any).Circle(containerRef.current, {
+        strokeWidth: 4,
+        trailWidth: 0,
+        trailColor: 'transparent',
+        color: color,
+        duration: 300,
+        easing: 'linear',
+        svgStyle: { width: '110px', height: '110px', overflow: 'visible' },
+      });
+      barRef.current.set(0);
+    } else {
+      barRef.current.path.setAttribute('stroke', color);
+    }
+
+    return () => {
+      if (barRef.current) {
+        try {
+          barRef.current.destroy();
+        } catch (e) { }
+        barRef.current = null;
+      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [color]);
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+
+    if (loading) {
+      // ✅ اجرای انیمیشن مرحله‌ای
+      const steps = [
+        { target: 0.5, duration: 2000 },  // تا 50% طی 2 ثانیه
+        { target: 0.75, duration: 3000 }, // تا 75% طی 2 ثانیه
+        { target: 0.9, duration: 4000 },  // تا 90% طی 1 ثانیه
+      ];
+
+      let currentStep = 0;
+      let startTime = Date.now();
+      let startValue = 0;
+
+      const animateStep = () => {
+        const step = steps[currentStep];
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / step.duration, 1);
+        const value = startValue + (step.target - startValue) * progress;
+        bar.set(value);
+
+        if (progress < 1) {
+          rafRef.current = requestAnimationFrame(animateStep);
+        } else {
+          // مرحله بعدی
+          currentStep++;
+          if (currentStep < steps.length) {
+            startValue = step.target;
+            startTime = Date.now();
+            rafRef.current = requestAnimationFrame(animateStep);
+          }
+        }
+      };
+
+      animateStep();
+    } else {
+      // ✅ وقتی loading = false → سریع تا 100% ببر
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      bar.animate(1.0, { duration: 400 });
+    }
+  }, [loading]);
+
+  return <div ref={containerRef} className="flex items-center justify-center" />;
 };
+
+
+
 
 interface FacilityData {
   url: string;
@@ -39,7 +108,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const { openBrowser, showBrowser, pageLoaded } = useInAppBrowser();
-  
+
   const [facilityData, setFacilityData] = useState<FacilityData | null>(null);
 
   useEffect(() => {
@@ -65,7 +134,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
   // Start loading the in-app browser hidden when facilityData becomes available
   useEffect(() => {
     if (!facilityData) return;
-    
+
     // Use openHidden to get footer and proper options
     openBrowser(facilityData.url, '_blank', `location=no,toolbar=no,backbutton=yes,hidden=yes,footer=yes,footertitle=${facilityData.title},footercolor=#F0F0F0,closebutton=yes,closebuttoncolor=#5d5d5d,menu=yes,zoom=no,footerheight=86`)
       .catch((err) => console.warn('IAB hidden load failed', err));
@@ -73,7 +142,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
 
   const handleConfirmOpen = async () => {
     if (!facilityData || !pageLoaded) return;
-    
+
     try {
       // Show the already loaded hidden browser
       showBrowser();
@@ -113,24 +182,25 @@ const Transfer: React.FC<TransferPageProps> = () => {
             {/* Circular Logo Container */}
             <div className="relative mb-6">
               {/* Main circle with facility color */}
-              <div 
+              <div
                 className="w-24 h-24 rounded-full flex items-center justify-center relative"
                 style={{ backgroundColor: facilityData.color }}
               >
                 {/* Facility Icon */}
-                <img 
-                  src={facilityData.icon} 
+                <img
+                  src={facilityData.icon}
                   alt={facilityData.title}
                   className="w-12 h-12 object-contain"
                 />
               </div>
-              
-              {/* Spinner overlay around logo - positioned outside the logo */}
-              <div className="absolute -inset-2 flex items-center justify-center">
-                <CustomSpinner color={facilityData.color} loading={!pageLoaded} />
+
+              {/* Progress circle overlay around logo - positioned outside the logo */}
+              <div className="absolute -inset-3 flex items-center justify-center">
+                <ProgressCircle color={facilityData.color} loading={!pageLoaded} />
               </div>
+
             </div>
-            
+
             {/* Transfer message */}
             <p className="text-xs font-medium text-[#0D0026] leading-none">
               شما در حال انتقال به سرویس {facilityData.title} هستید...
@@ -143,9 +213,8 @@ const Transfer: React.FC<TransferPageProps> = () => {
             <button
               onClick={handleConfirmOpen}
               disabled={!pageLoaded}
-              className={`flex h-8 p-2 justify-center items-center gap-2 flex-[1_0_0] rounded-lg transition-all duration-300 ${
-                pageLoaded ? 'opacity-100' : 'opacity-50 cursor-not-allowed'
-              }`}
+              className={`flex h-8 p-2 justify-center items-center gap-2 flex-[1_0_0] rounded-lg transition-all duration-300 ${pageLoaded ? 'opacity-100' : 'opacity-50 cursor-not-allowed'
+                }`}
               style={{ backgroundColor: pageLoaded ? facilityData.color : '#bfbfbf' }}
             >
               <span className="text-xs font-medium text-white leading-none">انتقال</span>

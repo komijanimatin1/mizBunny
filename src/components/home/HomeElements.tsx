@@ -11,7 +11,7 @@ const facilities = {
             id: 1,
             title: "پادرو",
             details: "سرویس حمل و نقل",
-            icon: "https://www.podro.shop/logo/Logo.svg",
+            icon: "/third-party logos/padro.svg",
             url: "https://panel.podro.shop/",
             color: "#D9C5FF"
         },
@@ -19,7 +19,7 @@ const facilities = {
             id: 2,
             title: "کاریزما",
             details: "سرمایه گذاری",
-            icon: "https://iranbroker.net/wp-content/uploads/2023/02/charisma.png",
+            icon: "/third-party logos/charisma.png",
             url: "https://auth.charisma.ir",
             color: "#FFE6E6"
         },
@@ -27,7 +27,7 @@ const facilities = {
             id: 3,
             title: "فرادرس",  
             details: "مرجع آموزشی",
-            icon: "https://logoyab.com/wp-content/uploads/2024/07/Faradars-Logo-1030x1030.png",
+            icon: "/third-party logos/Faradars-Logo.png",
             url: "https://faradars.org/register",
             color: "#D1E0FE"
         }
@@ -41,7 +41,7 @@ const financialServices = {
             id: 1,
             title: "اینوستوران",
             details: "سرمایه گذاری",
-            icon: "https://shenasa.ir/wp-content/uploads/2024/09/%D8%A7%DB%8C%D9%86%D9%88%D8%B3%D8%AA%D9%88%D8%B1%D8%A7%D9%86.png",
+            icon: "/third-party logos/investoran.webp",
             url: "https://www.investorun.com/login",
             color: "#fff5c5"
         },
@@ -49,7 +49,7 @@ const financialServices = {
             id: 2,
             title: "کارن کراود",
             details: "بورس و بازار مالی",
-            icon: "https://karboom.io/storage/employers/logo/8rg2reNiVTHi3WtyCXrbCtXKcxudVynh1PaehH2E.png",
+            icon: "/third-party logos/karencrowd.png",
             url: "https://www.karencrowd.com/accept-term/login",
             color: "#e6faff"
         },
@@ -57,7 +57,7 @@ const financialServices = {
             id: 3,
             title: "همافرین",
             details: "فرایند سرمایه گذاری",
-            icon: "https://hamafarin.ir/_next/static/media/logo.f921aa91.png",
+            icon: "/third-party logos/logo.f921aa91.png",
             url: "https://hamafarin.ir/account/login",
             color: "#f9c0c0"
         }

@@ -33,7 +33,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
       </div>
       
       <div 
-        className="flex overflow-x-scroll scrollbar-hide scroll-smooth gap-2.5 pl-4 [&::-webkit-scrollbar]:hidden w-full"
+        className="flex overflow-x-scroll scrollbar-hide scroll-smooth gap-2.5 [&::-webkit-scrollbar]:hidden w-full"
         ref={scrollRef}
       >
         {facilities.facilities.map((facility: any) => (
