@@ -67,7 +67,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
     if (!facilityData) return;
     
     // Use openHidden to get footer and proper options
-    openBrowser(facilityData.url, '_blank', `location=no,toolbar=no,backbutton=no,hidden=yes,footer=yes,footertitle=${facilityData.title},footercolor=#F0F0F0,closebutton=yes,closebuttoncolor=#5d5d5d,menu=yes,zoom=no,footerheight=86`)
+    openBrowser(facilityData.url, '_blank', `location=no,toolbar=no,backbutton=yes,hidden=yes,footer=yes,footertitle=${facilityData.title},footercolor=#F0F0F0,closebutton=yes,closebuttoncolor=#5d5d5d,menu=yes,zoom=no,footerheight=86`)
       .catch((err) => console.warn('IAB hidden load failed', err));
   }, [facilityData, openBrowser]);
 

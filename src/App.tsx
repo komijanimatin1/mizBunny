@@ -13,10 +13,9 @@ import { useAuthStore } from './stores/authStore';
 import './theme/variables.css';
 
 import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
-import { StatusBar } from '@capacitor/status-bar';
-// Initialize safe area manager (restores safe-area CSS variables/fallbacks)
-import './utils/safeArea';
-import { useEffect } from 'react';
+// import { StatusBar } from '@capacitor/status-bar';
+
+// import { useEffect } from 'react';
 
 setupIonicReact();
 
@@ -29,13 +28,13 @@ const AppContent: React.FC = () => {
   const { isAuthenticated, token } = useAuthStore();
 
   // Preserve native safe area spacing by disabling StatusBar overlay
-  useEffect(() => {
-    (async () => {
-      try {
-        await StatusBar.setOverlaysWebView({ overlay: false });
-      } catch {}
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       await StatusBar.setOverlaysWebView({ overlay: true });
+  //     } catch {}
+  //   })();
+  // }, []);
 
   return (
     <>
@@ -50,7 +49,7 @@ const AppContent: React.FC = () => {
         </Route>
       </IonRouterOutlet>
       {showToolbar && (
-        <IonFooter className="footer-safe">
+        <IonFooter>
           <ToolbarSection />
         </IonFooter>
       )}
@@ -60,7 +59,7 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <IonApp className="ion-safe-area-top">
+    <IonApp>
       <IonReactRouter>
         <AppContent />
       </IonReactRouter>

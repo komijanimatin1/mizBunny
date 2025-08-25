@@ -25,46 +25,6 @@ body {
 
 /* Mobile keyboard handling utilities */
 @layer utilities {
-  /* Apply safe-area padding inside IonContent */
-  .page-content-safe {
-    --padding-top: calc(var(--ion-safe-area-top, env(safe-area-inset-top, 0px)) + 8px);
-    --padding-bottom: calc(var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px)) + 8px);
-  }
-  
-  /* Enhanced safe-area margin utilities with better device support */
-  .mt-safe-8 {
-    margin-top: calc(var(--ion-safe-area-top, env(safe-area-inset-top, 0px)) + 8px);
-  }
-
-  .mb-safe-8 {
-    margin-bottom: calc(var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px)) + 8px);
-  }
-
-  .pt-safe-8 {
-    padding-top: calc(var(--ion-safe-area-top, env(safe-area-inset-top, 0px)) + 8px);
-  }
-
-  .pb-safe-8 {
-    padding-bottom: calc(var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px)) + 8px);
-  }
-  
-  /* Device-specific safe area handling */
-  .safe-area-top {
-    padding-top: max(
-      var(--ion-safe-area-top, 0px),
-      env(safe-area-inset-top, 0px),
-      var(--safe-area-top-fallback, 0px)
-    );
-  }
-  
-  .safe-area-bottom {
-    padding-bottom: max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    );
-  }
-  
   /* Dynamic viewport height for better mobile support */
   .h-dvh {
     height: 100dvh;
@@ -74,53 +34,11 @@ body {
     min-height: 100dvh;
   }
   
-  /* Safe area utilities */
-  .pb-safe {
-    padding-bottom: max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    );
-  }
-  
-  .pt-safe-top {
-    padding-top: max(
-      var(--ion-safe-area-top, 0px),
-      env(safe-area-inset-top, 0px),
-      var(--safe-area-top-fallback, 0px)
-    );
-  }
-  
-  .pb-safe-bottom {
-    padding-bottom: max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    );
-  }
-  
-  .mb-safe {
-    margin-bottom: max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    );
-  }
-  
   /* Keyboard-aware positioning */
   .keyboard-aware {
     transition: bottom 0.3s ease-in-out;
     /* Ensure smooth positioning changes */
     will-change: bottom;
-  }
-  
-  /* Toolbar positioning utilities */
-  .toolbar-bottom {
-    bottom: max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    );
   }
   
   .toolbar-keyboard {
@@ -129,94 +47,10 @@ body {
   }
 }
 
-/* Enhanced fallback positioning for toolbar when keyboard appears */
-@supports (height: 100dvh) {
-  .keyboard-aware {
-    /* Use dynamic viewport height for better mobile support */
-    bottom: calc(1rem + max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    ));
-  }
-}
-
-/* Media query for devices with virtual keyboards */
-@media (max-height: 600px) and (orientation: portrait) {
-  .keyboard-aware {
-    /* When viewport height is reduced (keyboard visible), position toolbar at bottom of visible area */
-    bottom: calc(0.5rem + max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    ));
-  }
-}
-
-/* Additional fallback for very small viewports */
-@media (max-height: 500px) {
-  .keyboard-aware {
-    /* Keep toolbar at bottom of very small viewports */
-    bottom: calc(0.25rem + max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px)
-    ));
-  }
-}
-
-/* Samsung and Android-specific safe area handling */
-@supports (-webkit-appearance: none) {
-  /* WebKit-based browsers (Safari, Chrome on Android) */
-  .safe-area-top {
-    padding-top: max(
-      var(--ion-safe-area-top, 0px),
-      env(safe-area-inset-top, 0px),
-      var(--safe-area-top-fallback, 0px),
-      constant(safe-area-inset-top, 0px)
-    );
-  }
-  
-  .safe-area-bottom {
-    padding-bottom: max(
-      var(--ion-safe-area-bottom, 0px),
-      env(safe-area-inset-bottom, 0px),
-      var(--safe-area-bottom-fallback, 0px),
-      constant(safe-area-inset-bottom, 0px)
-    );
-  }
-}
-
-/* Android-specific fallbacks */
-@media screen and (max-width: 768px) {
-  /* For mobile devices, provide fallback safe area values */
-  :root {
-    --safe-area-top-fallback: 24px;
-    --safe-area-bottom-fallback: 24px;
-  }
-  
-  /* Samsung One UI specific adjustments */
-  @media screen and (-webkit-min-device-pixel-ratio: 2) {
-    :root {
-      --safe-area-top-fallback: 28px;
-      --safe-area-bottom-fallback: 28px;
-    }
-  }
-}
-
 /* Ensure proper viewport handling on mobile */
 html, body {
   height: 100%;
   overflow-x: hidden;
-}
-
-/* Footer safe-area padding */
-.footer-safe {
-  --padding-bottom: calc(max(
-    var(--ion-safe-area-bottom, 0px),
-    env(safe-area-inset-bottom, 0px),
-    var(--safe-area-bottom-fallback, 0px)
-  ) + 8px);
 }
 
 /* Better touch handling for mobile */
