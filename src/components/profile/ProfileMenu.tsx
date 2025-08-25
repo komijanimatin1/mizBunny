@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@iconify/react';
 
 type ProfileMenuProps = {
   onLogout: () => void;
@@ -60,7 +61,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
               <img src={item.iconSrc} alt="" className="w-5 h-5" />
               <span className="text-[15px] text-[#111827]">{item.title}</span>
             </span>
-            <img src={arrowLeftSrc} alt="" className="w-5 h-5 opacity-50" />
+            <Icon icon="fluent:chevron-left-12-filled" width="12" height="12" className="opacity-50" />
           </button>
           <div className={index === items.length - 1 ? 'hidden' : 'w-4/5 h-px bg-[#F4F4F4] mx-auto'} />
         </React.Fragment>
@@ -80,7 +81,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           <img src={'/icons/profile-icons/Sign%20Out.svg'} alt="" className="w-5 h-5" />
           <span className="text-[15px]">خروج از حساب</span>
         </span>
-        <img src={arrowLeftSrc} alt="" className="w-5 h-5 opacity-70" />
+        <Icon icon="fluent:chevron-left-12-filled" width="12" height="12" className="opacity-70" />
       </button>
     </div>
   );

@@ -83,6 +83,22 @@ body {
     );
   }
   
+  .pt-safe-top {
+    padding-top: max(
+      var(--ion-safe-area-top, 0px),
+      env(safe-area-inset-top, 0px),
+      var(--safe-area-top-fallback, 0px)
+    );
+  }
+  
+  .pb-safe-bottom {
+    padding-bottom: max(
+      var(--ion-safe-area-bottom, 0px),
+      env(safe-area-inset-bottom, 0px),
+      var(--safe-area-bottom-fallback, 0px)
+    );
+  }
+  
   .mb-safe {
     margin-bottom: max(
       var(--ion-safe-area-bottom, 0px),

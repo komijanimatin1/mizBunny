@@ -1,7 +1,6 @@
 import { IonContent, IonPage, IonButton } from '@ionic/react';
 import { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import { useAuthStore } from '../stores/authStore';
 
@@ -22,8 +21,8 @@ const Splash: React.FC = () => {
   const injectTimeoutRef = useRef<any>(null);
   const injectedOnceRef = useRef<boolean>(false);
 
-  // const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
-  const LOGIN_URL = 'https://www.w3schools.com';
+  const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
+  // const LOGIN_URL = 'https://www.w3schools.com';
   const closeBrowserAndCleanup = () => {
     try {
       if (browserRef.current) {
@@ -47,7 +46,19 @@ const Splash: React.FC = () => {
     try {
       sessionStorage.setItem('session_started', 'true');
     } catch {}
-    login(userData, authToken);
+    
+    if (authToken) {
+      const loginData = {
+        token: authToken,
+        refreshToken: authToken, // Using same token for both since we only have one
+        userId: userData._id || userData.id || 'unknown'
+      };
+      login(userData, loginData);
+    } else {
+      console.warn('No auth token provided, cannot login');
+      return;
+    }
+    
     setSuccessfulLogin(true);
     closeBrowserAndCleanup();
   };

@@ -1,79 +1,31 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useInAppBrowser } from '../../hooks/useInAppBrowser';
-import ConfirmationModal from '../ui/ConfirmationModal';
+import React, { useRef } from 'react';
+import { useIonRouter } from '@ionic/react';
 
 const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { openBrowser } = useInAppBrowser();
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    url: string;
-    title: string;
-  }>({
-    isOpen: false,
-    url: '',
-    title: ''
-  });
+  const ionRouter = useIonRouter();
 
-  // Reset modal state when web view is closed
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden && modalState.isOpen) {
-        // Web view was likely closed, reset modal state
-        setModalState({ isOpen: false, url: '', title: '' });
-      }
-    };
-
-    const handleFocus = () => {
-      // When app regains focus, check if modal should be closed
-      if (modalState.isOpen) {
-        // Small delay to ensure web view is fully closed
-        setTimeout(() => {
-          setModalState({ isOpen: false, url: '', title: '' });
-        }, 100);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleFocus);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [modalState.isOpen]);
 
   const handleItemClick = (url: string, title: string) => {
-    setModalState({
-      isOpen: true,
-      url,
-      title
-    });
-  };
-
-  const handleConfirmOpen = async () => {
-    // Close modal immediately when confirm button is clicked
-    setModalState({ isOpen: false, url: '', title: '' });
-    
-    try {
-      await openBrowser(
-        modalState.url,
-        '_blank',
-        `showurl=no,navigationbuttons=yes,backbutton=yes,toolbar=no,toolbarheight=80,toolbarcolor=#5d5d5d,fullscreen=yes,footer=yes,menu=yes,hardwareback=yes,closebutton=yes,zoom=no,footertitle=${modalState.title},footercolor=#F0F0F0,closebuttoncolor=#5d5d5d,gestures=no,footerheight=86`
-      );
-    } catch (err) {
-      console.error('Failed to open:', err);
-      // Modal is already closed, no need to handle error state
+    // Find the facility data to pass to the transfer page
+    const facility = facilities.facilities.find((f: any) => f.url === url);
+    if (facility) {
+      const queryParams = new URLSearchParams();
+      queryParams.append('url', facility.url);
+      queryParams.append('title', facility.title);
+      queryParams.append('icon', facility.icon);
+      queryParams.append('color', facility.color);
+      ionRouter.push(`/transfer?${queryParams.toString()}`, 'forward');
     }
   };
 
-  const handleCancelOpen = () => {
-    setModalState({ isOpen: false, url: '', title: '' });
-  };
+
 
 
   return (
     <div className="w-full">
+
+
 
       {/* title of facilities */}
       <div className="text-right rtl mb-3">
@@ -87,7 +39,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
         {facilities.facilities.map((facility: any) => (
           <div 
             key={facility.id} 
-            className="flex-col w-[136px] min-w-[136px] max-w-[136px] flex-shrink-0 rounded-xl flex items-center cursor-pointer hover:scale-105 transition-all duration-300"
+            className="flex-col w-[136px] min-w-[136px] max-w-[136px] flex-shrink-0 rounded-xl flex items-center cursor-pointer"
           >
             {/* Color box with icon */}
             <div 
@@ -126,13 +78,7 @@ const FacilitiesScroll: React.FC<{ facilities: any }> = ({ facilities }) => {
         ))}
       </div>
       
-      {/* Confirmation Modal */}
-      <ConfirmationModal
-        isOpen={modalState.isOpen}
-        onConfirm={handleConfirmOpen}
-        onCancel={handleCancelOpen}
-        siteName={modalState.title}
-      />
+
 
     </div>
   );

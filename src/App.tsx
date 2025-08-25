@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Splash from './pages/Splash';
 import AIPage from './pages/AIPage';
 import Profile from './pages/Profile';
+import Transfer from './pages/Transfer';
 import ToolbarSection from './components/home/ToolbarSection';
 import { useAuthStore } from './stores/authStore';
 
@@ -12,7 +13,9 @@ import { useAuthStore } from './stores/authStore';
 import './theme/variables.css';
 
 import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
-import { StatusBar, Style } from '@capacitor/status-bar';
+import { StatusBar } from '@capacitor/status-bar';
+// Initialize safe area manager (restores safe-area CSS variables/fallbacks)
+import './utils/safeArea';
 import { useEffect } from 'react';
 
 setupIonicReact();
@@ -22,16 +25,15 @@ Keyboard.setResizeMode({ mode: KeyboardResize.None }).catch(() => {});
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const showToolbar = location.pathname !== '/splash';
+  const showToolbar = location.pathname !== '/splash' && location.pathname !== '/transfer';
   const { isAuthenticated, token } = useAuthStore();
 
-  // Prevent content under status bar and match platform backgrounds
+  // Preserve native safe area spacing by disabling StatusBar overlay
   useEffect(() => {
     (async () => {
       try {
-        await StatusBar.setOverlaysWebView({ overlay: true });
+        await StatusBar.setOverlaysWebView({ overlay: false });
       } catch {}
-      // style adjustments optional
     })();
   }, []);
 
@@ -40,8 +42,9 @@ const AppContent: React.FC = () => {
       <IonRouterOutlet>
         <Route exact path="/splash" render={() => <Splash key={`splash-${isAuthenticated}-${token}`} />} />
         <Route exact path="/home" render={() => (isAuthenticated || token ? <Home /> : <Redirect to="/splash" />)} />
-        <Route exact path="/ai" component={AIPage} />
-        <Route exact path="/profile" component={Profile} />
+        <Route exact path="/ai" render={() => (isAuthenticated || token ? <AIPage /> : <Redirect to="/splash" />)} />
+        <Route exact path="/profile" render={() => (isAuthenticated || token ? <Profile /> : <Redirect to="/splash" />)} />
+        <Route exact path="/transfer" render={() => <Transfer />} />
         <Route exact path="/">
           <Redirect to="/splash" />
         </Route>
@@ -57,7 +60,7 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <IonApp>
+    <IonApp className="ion-safe-area-top">
       <IonReactRouter>
         <AppContent />
       </IonReactRouter>
