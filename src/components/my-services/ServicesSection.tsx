@@ -9,7 +9,7 @@ const ServicesSection = () => {
       await openBrowser(
         url,
         '_blank',
-        `showurl=no,navigationbuttons=no,backbutton=yes,location=no,toolbar=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},menu=yes,hardwareback=yes,closebutton=yes,footerheight=80`
+        `showurl=no,navigationbuttons=no,backbutton=yes,location=no,toolbar=no,zoom=no,fullscreen=yes,footercolor=#F0F0F0,footer=yes,footertitle=${title},menu=yes,hardwareback=yes,closebutton=yes,footerheight=80,disallowoverscroll=yes,bouncescroll=no`
       );
     } catch (err) {
       console.error('Failed to open:', err);

@@ -1,11 +1,15 @@
 import React from 'react';
 import { IonContent, IonPage } from '@ionic/react';
-import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useBackButton } from '../hooks/useBackButton';
 import { useAuthStore } from '../stores/authStore';
 import UserDetails from '../components/profile/UserDetails';
 import ProfileMenu from '../components/profile/ProfileMenu';
+import { Preferences } from '@capacitor/preferences';
+// ClearData plugin (cordova-plugin-clear-data) is exposed as a global
+declare const ClearData: {
+  cache: (success?: () => void, error?: (err: string) => void) => void;
+};
 
 
 
@@ -15,8 +19,59 @@ const Profile: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
   const history = useHistory();
 
+  async function resetAppDataSimple() {
+    try {
+      console.log('[RESET] شروع پاک‌سازی داده‌ها...');
+  
+      // پاک کردن localStorage
+      localStorage.clear();
+  
+      // پاک کردن sessionStorage
+      sessionStorage.clear();
+  
+      // پاک کردن IndexedDB
+      if (window.indexedDB && indexedDB.databases) {
+        try {
+          const dbs = await indexedDB.databases();
+          for (const db of dbs) {
+            if (db.name) {
+              await new Promise((resolve, reject) => {
+                const request = indexedDB.deleteDatabase(db.name!);
+                request.onsuccess = () => resolve(true);
+                request.onerror = () => reject();
+                request.onblocked = () => reject();
+              });
+            }
+          }
+        } catch (err) {
+          console.warn('[RESET] IndexedDB پاک نشد یا پشتیبانی نمی‌شود', err);
+        }
+      }
+  
+      console.log('[RESET] تمام داده‌ها پاک شد.');
+  
+    } catch (error) {
+      console.error('[RESET] خطا در فرآیند پاک‌سازی:', error);
+    }
+  }
+  
   const handleLogout = () => {
     logout();
+    // clear webview cache and persistent data via native plugin when available
+    try {
+      if (typeof ClearData !== 'undefined' && ClearData.cache) {
+        ClearData.cache(() => {
+          console.info('[CLEARDATA] native cache cleared');
+        }, (err) => {
+          console.warn('[CLEARDATA] failed to clear native cache', err);
+        });
+      }
+    } catch (err) {
+      console.warn('[CLEARDATA] plugin not available or error invoking it', err);
+    }
+
+    resetAppDataSimple();
+    Preferences.clear();
     history.replace('/splash');
   };
 

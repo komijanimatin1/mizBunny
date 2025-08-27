@@ -9,7 +9,7 @@ const AIPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
+      <IonContent scrollY={false} fullscreen>
         <div className="w-full h-full bg-[#E0E0E0] p-4 pb-28 text-lg text-[#333]">
           <AIComponent />
         </div>
