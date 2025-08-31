@@ -32,4 +32,5 @@ io.ionic.starter.app-debug-30 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@
 io.ionic.starter.app-debug-31 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@capacitor\app\android\build\intermediates\packaged_res\debug\packageDebugResources
 io.ionic.starter.app-debug-32 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@capacitor\haptics\android\build\intermediates\packaged_res\debug\packageDebugResources
 io.ionic.starter.app-debug-33 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@capacitor\keyboard\android\build\intermediates\packaged_res\debug\packageDebugResources
-io.ionic.starter.app-debug-34 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@capacitor\status-bar\android\build\intermediates\packaged_res\debug\packageDebugResources
+io.ionic.starter.app-debug-34 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@capacitor\preferences\android\build\intermediates\packaged_res\debug\packageDebugResources
+io.ionic.starter.app-debug-35 C:\Users\ThinkBook\Desktop\mizBunny\node_modules\@capacitor\status-bar\android\build\intermediates\packaged_res\debug\packageDebugResources

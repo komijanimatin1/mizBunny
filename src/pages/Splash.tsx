@@ -151,6 +151,31 @@ const Splash: React.FC = () => {
   const openLoginBrowser = async () => {
     console.log('[DEBUG] 🔓 Opening login browser...');
     try {
+      // If we have persisted auth in localStorage, skip opening the webview
+      // This prevents reopening the login webview when the app was closed without logout
+      const persisted = localStorage.getItem('auth-storage');
+      if (persisted) {
+        try {
+          const parsed = JSON.parse(persisted);
+          const state = parsed?.state || parsed;
+          if (state && (state.isAuthenticated || state.token)) {
+            console.log('[DEBUG] ✅ Persisted auth detected, skipping IAB and restoring store');
+            if (!isAuthenticated && state.token) {
+              try {
+                // Restore zustand store synchronously to reflect persisted state
+                login(state.user ?? null, { token: state.token, userId: state.userId ?? state.user?._id ?? 'unknown', refreshToken: state.refreshToken ?? state.token });
+              } catch (err) {
+                console.error('[DEBUG] Failed to restore auth store from persisted state', err);
+              }
+            }
+            // Navigate directly into app
+            history.replace('/home');
+            return;
+          }
+        } catch (err) {
+          console.error('[DEBUG] Failed to parse persisted auth:', err);
+        }
+      }
       const options = [
         'location=yes',
         'toolbar=yes',
@@ -164,10 +189,9 @@ const Splash: React.FC = () => {
         'showurl=no',
         'gestures=no',
         'zoom=no',
-        // Ensure in-app browser starts with cleared cache and session cookies so
-        // it won't reuse prior auth cookies (prevents automatic re-login after logout)
         'clearcache=yes',
-        'clearsessioncache=yes'
+        'clearsessioncache=yes',
+        'cleardata=yes'
       ].join(',');
 
       setIsFirstTime(false);

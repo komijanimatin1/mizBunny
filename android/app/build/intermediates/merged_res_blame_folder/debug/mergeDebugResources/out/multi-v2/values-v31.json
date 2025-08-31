@@ -23,30 +23,6 @@
                     }
                 }
             ]
-        },
-        {
-            "outputFile": "C:\\Users\\ThinkBook\\.gradle\\daemon\\8.11.1\\io.ionic.starter.app-mergeDebugResources-24:\\values-v31\\values-v31.xml",
-            "map": [
-                {
-                    "source": "C:\\Users\\ThinkBook\\Desktop\\mizBunny\\android\\app\\src\\main\\res\\values-v31\\styles.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "1",
-                        "startOffsets": "134",
-                        "endLines": "14",
-                        "endColumns": "9",
-                        "endOffsets": "784"
-                    },
-                    "to": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endLines": "12",
-                        "endColumns": "9",
-                        "endOffsets": "649"
-                    }
-                }
-            ]
         }
     ]
 }

@@ -6,6 +6,7 @@
 		"AppPlugin",
 		"HapticsPlugin",
 		"KeyboardPlugin",
+		"PreferencesPlugin",
 		"StatusBarPlugin",
 		"CDVPlugin"
 	]
