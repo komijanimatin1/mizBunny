@@ -78,9 +78,9 @@ const Profile: React.FC = () => {
   if (!isAuthenticated || !user) {
     return (
       <IonPage>
-        <IonContent fullscreen>
+        <IonContent>
           <div className="w-full h-full bg-[#E0E0E0] p-4 text-lg text-[#333]">
-            <div className="bg-white w-full h-[calc(100%-theme(spacing.14))] p-4 rounded-2xl flex items-center justify-center pb-28 mt-16">
+            <div className="bg-white w-full h-[calc(100%-4rem)] p-4 rounded-2xl flex items-center justify-center pb-28">
               <div className="text-xl font-semibold text-[#666]">برای مشاهده پروفایل وارد شوید</div>
             </div>
           </div>
@@ -93,9 +93,9 @@ const Profile: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
-        <div className="w-full h-full bg-[#E0E0E0] p-4 pb-28 text-lg text-[#333]">
-          <div className="bg-white w-full h-[calc(100%-theme(spacing.14))] pt-0 px-4 rounded-2xl overflow-auto [&::-webkit-scrollbar]:hidden flex flex-col gap-4 pb-4 mt-16">
+      <IonContent>
+        <div className="w-full h-full bg-[#E0E0E0] p-4 pb-24 text-lg text-[#333] pt-16">
+          <div className="bg-white w-full h-full pt-0 px-4 rounded-2xl overflow-auto [&::-webkit-scrollbar]:hidden flex flex-col gap-4 pb-4">
             <UserDetails />
             <ProfileMenu onLogout={handleLogout} />
           </div>

@@ -54,7 +54,16 @@ const Splash: React.FC = () => {
     }
 
     setSuccessfulLogin(true);
-    
+
+    if (window && window.sysBunny) {
+
+      window.sysBunny.token = authToken;
+      window.sysBunny.refreshToken = refreshToken;
+
+      window.sysBunny.getProfile().then((profile) => {
+        console.log('[DEBUG] ✅ SysBunny profile:', profile);
+      });
+    }
     // close webview and cleanup listeners
     try {
       if (browserRef.current) {
@@ -190,6 +199,7 @@ const Splash: React.FC = () => {
         'gestures=no',
         'zoom=no',
         'clearcache=yes',
+        'disallowoverscroll=yes',
         'clearsessioncache=yes',
         'cleardata=yes'
       ].join(',');
