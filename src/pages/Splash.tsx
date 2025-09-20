@@ -5,210 +5,186 @@ import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import { useAuthStore } from '../stores/authStore';
 
 const Splash: React.FC = () => {
-  const ENABLE_MOCK_LOGIN = true; // set to false when integrating with real login page emitting messages
+  console.log('[DEBUG] Splash component rendering');
   const [logoAnimation, setLogoAnimation] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeAnimation, setWelcomeAnimation] = useState(false);
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [successfulLogin, setSuccessfulLogin] = useState(false);
   const [isWebViewOpen, setIsWebViewOpen] = useState(false);
+
   const history = useHistory();
   const { openBrowser, closeBrowser, isAvailable } = useInAppBrowser();
   const { login, token, isAuthenticated } = useAuthStore();
+
+  console.log('[DEBUG] Current auth state:', token, isAuthenticated, isWebViewOpen, successfulLogin);
   const cleanupRef = useRef<() => void>(() => {});
   const browserRef = useRef<any>(null);
   const listenerAttachedRef = useRef<boolean>(false);
-  const injectTimeoutRef = useRef<any>(null);
-  const injectedOnceRef = useRef<boolean>(false);
 
   const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
-  // const LOGIN_URL = 'https://www.w3schools.com';
-  const closeBrowserAndCleanup = () => {
+  console.log('[DEBUG] LOGIN_URL:', LOGIN_URL);
+
+  // --- finishLogin: قبول token و refreshToken و userData ---
+  const finishLogin = (userData: any, authToken: string | null, refreshToken?: string | null) => {
+    console.log('[DEBUG] ✅ Login success with token:', !!authToken);
+    try {
+      sessionStorage.setItem('session_started', 'true');
+    } catch (err) {
+      console.error('[DEBUG] Failed to set session_started:', err);
+    }
+
+    if (!authToken) {
+      console.warn('[DEBUG] ❌ No auth token provided');
+      return;
+    }
+
+    const loginData = {
+      token: authToken,
+      refreshToken: refreshToken ?? authToken,
+      userId: userData?._id ?? userData?.id ?? userData?.userId ?? 'unknown'
+    };
+
+    // call zustand / store login
+    try {
+      login(userData, loginData);
+      console.log('[DEBUG] ✅ Store login successful');
+    } catch (err) {
+      console.error('[DEBUG] ❌ Store login failed:', err);
+    }
+
+    setSuccessfulLogin(true);
+
+    if (window && window.sysBunny) {
+
+      window.sysBunny.token = authToken;
+      window.sysBunny.refreshToken = refreshToken;
+
+      window.sysBunny.getProfile().then((profile) => {
+        console.log('[DEBUG] ✅ SysBunny profile:', profile);
+      });
+    }
+    // close webview and cleanup listeners
     try {
       if (browserRef.current) {
         closeBrowser();
         browserRef.current = null;
       }
     } catch (e) {
-      console.error('Error closing browser:', e);
+      console.error('[DEBUG] ❌ Error closing browser:', e);
     } finally {
-      // clear any pending mock injection timers
-      if (injectTimeoutRef.current) {
-        clearTimeout(injectTimeoutRef.current);
-        injectTimeoutRef.current = null;
-      }
-      injectedOnceRef.current = false;
       setIsWebViewOpen(false);
+      cleanupRef.current?.();
     }
   };
 
-  const finishLogin = (userData: any, authToken: string | null) => {
-    try {
-      sessionStorage.setItem('session_started', 'true');
-    } catch {}
+  // --- Robust message parser & handler ---
+  const handleMessage = (eventOrPayload: any) => {
+    console.log('[DEBUG] 📨 Message received');
     
-    if (authToken) {
-      const loginData = {
-        token: authToken,
-        refreshToken: authToken, // Using same token for both since we only have one
-        userId: userData._id || userData.id || 'unknown'
-      };
-      login(userData, loginData);
-    } else {
-      console.warn('No auth token provided, cannot login');
-      return;
-    }
-    
-    setSuccessfulLogin(true);
-    closeBrowserAndCleanup();
-  };
-
-  const handleMessage = (event: any) => {
-    const raw = event?.data ?? event;
+    // eventOrPayload might be a MessageEvent or the raw payload (some IABs call back differently)
+    let raw = (eventOrPayload && eventOrPayload.data !== undefined) ? eventOrPayload.data : eventOrPayload;
     let parsed: any = raw;
 
+    // if raw is string try to parse JSON
     if (typeof raw === 'string') {
       try {
         parsed = JSON.parse(raw);
-      } catch {
+      } catch (err) {
         parsed = raw;
       }
     }
 
-    // iOS IAB posts messages as { type: 'message', data: <payload> }
+    // Some IABs wrap posted messages as { type: 'message', data: <payload> }
     if (parsed && typeof parsed === 'object' && parsed.type === 'message' && parsed.data) {
       parsed = parsed.data;
     }
 
-    console.log('[Splash] IAB message received:', parsed);
-
-    if (parsed && typeof parsed === 'object') {
-      if (parsed.type === 'toolbarback') {
-        console.log('[Splash] Toolbar back button pressed.');
-        closeBrowserAndCleanup();
+    try {
+      // Ensure it's an object with our origin marker
+      if (!parsed || typeof parsed !== 'object') {
         return;
       }
 
-      if (parsed.origin === 'mizBunnyApp') {
-        console.log('[Splash] Received message from mizBunnyApp origin.');
-        const payload = parsed.data && typeof parsed.data === 'object' ? parsed.data : parsed;
+      // Only accept messages that our web app sends
+      if (parsed.origin !== 'mizBunnyApp') {
+        console.log('[DEBUG] ❌ Wrong origin:', parsed.origin);
+        return;
+      }
 
-        if (payload && (payload._id || payload.username || payload.email)) {
-          console.log('[Splash] Login payload accepted:', payload);
-          finishLogin(payload, payload.refreshToken ?? null);
+      // handle login success action
+      if (parsed.action === 'loginSuccess' && parsed.data) {
+        console.log('[DEBUG] 🎯 Login success message received');
+        const data = parsed.data;
+        const tokenFromWeb = data.token ?? null;
+        const refreshFromWeb = data.refreshToken ?? null;
+        const userId = data.userId ?? data.user?.id ?? data.user?._id ?? null;
+
+        const userData = data.user ?? { id: userId, userId };
+
+        if (tokenFromWeb && (userId || userData)) {
+          console.log('[DEBUG] ✅ Calling finishLogin');
+          finishLogin(userData, tokenFromWeb, refreshFromWeb);
+          return;
+        } else {
+          console.warn('[DEBUG] ❌ Missing token or userId');
           return;
         }
-
-        console.warn('[Splash] Invalid payload, using mock fallback');
-        const mockUser = {
-          id: 'mock-user-fallback',
-          email: 'user@mizbunny.com',
-          name: 'MizBunny User',
-        };
-        finishLogin(mockUser, 'mock-jwt-token-fallback');
       }
-    } else {
-      console.log('[Splash] Received message from unknown origin or invalid format:', parsed);
+
+      console.log('[DEBUG] 🔄 Unhandled action:', parsed.action);
+    } catch (err) {
+      console.error('[DEBUG] ❌ Message handling error:', err);
     }
   };
 
-  const injectMockMessageScript = (iabRef: any) => {
-    if (!iabRef?.executeScript && !iabRef?.injectScriptCode) return;
-
-    const mockScript = `
-      (function(){
-        if (window.__mizbunnyMockInjected) { return; }
-        window.__mizbunnyMockInjected = true;
-        function send(){
-          try {
-            const mockMessage = {
-              origin: 'mizBunnyApp',
-              type: 'login_success',
-              data: {
-                _id: '508216cd-4ddf-4036-a08d-6f1c8e05fe2b',
-                username: 'hamidqasemy',
-                email: 'ghasemi1992@gmail.com',
-                name: 'حمید',
-                lastName: 'قاسمی',
-                phoneNumber: '09384328756',
-                roles: ['superAdmin'],
-                refreshToken: 'mock-refresh-token'
-              }
-            };
-
-            var payload = JSON.stringify(mockMessage);
-
-            if (window.cordova_iab && typeof window.cordova_iab.postMessage === 'function') {
-              window.cordova_iab.postMessage(payload);
-            } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.cordova_iab) {
-              window.webkit.messageHandlers.cordova_iab.postMessage(payload);
-            } else if (window.parent && typeof window.parent.postMessage === 'function') {
-              window.parent.postMessage(mockMessage, '*');
-            } else if (window.dispatchEvent) {
-              const e = new MessageEvent('message', { data: mockMessage });
-              window.dispatchEvent(e);
-            }
-          } catch (err) {
-            console.error('[Mock] failed to post message', err);
-          }
-        }
-        // send once after 3 seconds
-        setTimeout(send, 3000);
-      })();
-    `;
-
+  const closeBrowserAndCleanup = () => {
+    console.log('[DEBUG] 🚪 Closing browser...');
     try {
-      if (iabRef.executeScript) {
-        iabRef.executeScript({ code: mockScript });
-      } else if (iabRef.injectScriptCode) {
-        iabRef.injectScriptCode(mockScript);
+      if (browserRef.current) {
+        closeBrowser();
+        browserRef.current = null;
       }
-      console.log('[Mock] injected script into IAB');
-      injectedOnceRef.current = true;
-    } catch (err) {
-      console.error('[Mock] injection error', err);
-    }
-  };
-
-  // const shouldInjectForUrl = (url: string | undefined | null) => {
-  //   if (!url) return false;
-  //   try {
-  //     const u = new URL(url);
-  //     // Only inject on our login domain or when explicitly requested via flag
-  //     return ENABLE_MOCK_LOGIN || u.hostname.endsWith('mizbunny.com') || u.searchParams.has('isLauncherLogin');
-  //   } catch {
-  //     return false;
-  //   }
-  // };
-
-  // helper to simulate mock message on web fallback
-  const postMockMessageToWindow = () => {
-    const mockMessage = {
-      origin: 'mizBunnyApp',
-      type: 'login_success',
-      data: {
-        _id: '508216cd-4ddf-4036-a08d-6f1c8e05fe2b',
-        username: 'hamidqasemy',
-        email: 'ghasemi1992@gmail.com',
-        name: 'حمید',
-        lastName: 'قاسمی',
-        phoneNumber: '09384328756',
-        roles: ['superAdmin'],
-        refreshToken: 'mock-refresh-token'
+    } catch (e) {
+      console.error('[DEBUG] ❌ Error closing browser:', e);
+    } finally {
+      setIsWebViewOpen(false);
+      try {
+        cleanupRef.current?.();
+      } catch (err) {
+        console.error('[DEBUG] ❌ Cleanup error:', err);
       }
-    };
-    try {
-      window.postMessage(mockMessage, '*');
-      setTimeout(() => window.postMessage(mockMessage, '*'), 1000);
-      setTimeout(() => window.postMessage(mockMessage, '*'), 3000);
-      console.log('[Mock] posted mock message to window');
-    } catch (err) {
-      console.error('[Mock] failed to post mock message to window', err);
     }
   };
 
   const openLoginBrowser = async () => {
+    console.log('[DEBUG] 🔓 Opening login browser...');
     try {
+      // If we have persisted auth in localStorage, skip opening the webview
+      // This prevents reopening the login webview when the app was closed without logout
+      const persisted = localStorage.getItem('auth-storage');
+      if (persisted) {
+        try {
+          const parsed = JSON.parse(persisted);
+          const state = parsed?.state || parsed;
+          if (state && (state.isAuthenticated || state.token)) {
+            console.log('[DEBUG] ✅ Persisted auth detected, skipping IAB and restoring store');
+            if (!isAuthenticated && state.token) {
+              try {
+                // Restore zustand store synchronously to reflect persisted state
+                login(state.user ?? null, { token: state.token, userId: state.userId ?? state.user?._id ?? 'unknown', refreshToken: state.refreshToken ?? state.token });
+              } catch (err) {
+                console.error('[DEBUG] Failed to restore auth store from persisted state', err);
+              }
+            }
+            // Navigate directly into app
+            history.replace('/home');
+            return;
+          }
+        } catch (err) {
+          console.error('[DEBUG] Failed to parse persisted auth:', err);
+        }
+      }
       const options = [
         'location=yes',
         'toolbar=yes',
@@ -221,86 +197,83 @@ const Splash: React.FC = () => {
         'toolbarcolor=#F0F0F0',
         'showurl=no',
         'gestures=no',
-        'zoom=no'
-      ].join(',')
+        'zoom=no',
+        'clearcache=yes',
+        'disallowoverscroll=yes',
+        'clearsessioncache=yes',
+        'cleardata=yes'
+      ].join(',');
 
       setIsFirstTime(false);
       browserRef.current = await openBrowser(LOGIN_URL, '_blank', options);
+      console.log('[DEBUG] 🌐 Browser opened:', !!browserRef.current);
+      console.log('[DEBUG] 🌐 local and session storage', localStorage.getItem('auth-storage'), sessionStorage.getItem('session_started'));
       setIsWebViewOpen(true);
 
+      // If the returned object supports addEventListener, attach message listener to it
       if (browserRef.current?.addEventListener) {
-        browserRef.current.addEventListener('message', handleMessage);
-        listenerAttachedRef.current = true;
-        console.log('[Splash] Added "message" event listener to IAB.');
+        // avoid double attachments
+        if (!listenerAttachedRef.current) {
+          browserRef.current.addEventListener('message', handleMessage);
+          listenerAttachedRef.current = true;
+          console.log('[Splash] Added message listener to IAB instance.');
+        }
 
         const onPageLoad = (e: any) => {
-          console.log('[Splash] Page loaded:', e?.url);
-          if (ENABLE_MOCK_LOGIN && !injectedOnceRef.current) {
-            injectMockMessageScript(browserRef.current);
-          }
-          // Keep listening to loadstop to reinject after redirects/navigation
+          console.log('[DEBUG] IAB loadstop:', e?.url);
+          
         };
 
-        browserRef.current.addEventListener('loadstop', onPageLoad);
-        console.log('[Splash] Added "loadstop" event listener to IAB.');
-
         const onBrowserExit = () => {
-          console.log('[Splash] InAppBrowser exit/back detected.');
+          console.log('[Splash] IAB exit/back detected');
           closeBrowserAndCleanup();
         };
 
-        // Ensure closing or back in IAB brings user back to Splash with Retry option
-        browserRef.current.addEventListener?.('exit', onBrowserExit);
-        browserRef.current.addEventListener?.('backbutton', onBrowserExit);
+        browserRef.current.addEventListener('loadstop', onPageLoad);
+        browserRef.current.addEventListener('exit', onBrowserExit);
+        browserRef.current.addEventListener('backbutton', onBrowserExit);
 
-        // Schedule a one-shot mock injection 3 seconds after opening (regardless of site)
-        if (ENABLE_MOCK_LOGIN && !injectedOnceRef.current) {
-          injectTimeoutRef.current = setTimeout(() => {
-            if (!injectedOnceRef.current && browserRef.current) {
-              injectMockMessageScript(browserRef.current);
+        cleanupRef.current = () => {
+          try {
+            if (listenerAttachedRef.current && browserRef.current) {
+              browserRef.current.removeEventListener?.('message', handleMessage);
+              console.log('[Splash] Removed message listener from IAB instance.');
             }
-          }, 3000);
+          } catch (err) {}
+          try { browserRef.current?.removeEventListener?.('loadstop', onPageLoad); } catch {}
+          try { browserRef.current?.removeEventListener?.('exit', onBrowserExit); } catch {}
+          try { browserRef.current?.removeEventListener?.('backbutton', onBrowserExit); } catch {}
+          listenerAttachedRef.current = false;
+          browserRef.current = null;
+        };
+      } else {
+        // Fallback (web): listen on window
+        if (!listenerAttachedRef.current) {
+          window.addEventListener('message', handleMessage);
+          listenerAttachedRef.current = true;
+          console.log('[Splash] Added message listener to window (web fallback).');
         }
 
         cleanupRef.current = () => {
-          if (listenerAttachedRef.current && browserRef.current) {
-            browserRef.current.removeEventListener?.('message', handleMessage);
-            console.log('[Splash] Removed "message" event listener from IAB.');
-          }
           try {
-            browserRef.current?.removeEventListener?.('loadstop', onPageLoad);
-            browserRef.current?.removeEventListener?.('exit', onBrowserExit);
-            browserRef.current?.removeEventListener?.('backbutton', onBrowserExit);
-          } catch {}
-          if (injectTimeoutRef.current) {
-            clearTimeout(injectTimeoutRef.current);
-            injectTimeoutRef.current = null;
-          }
-          browserRef.current = null;
+            window.removeEventListener('message', handleMessage);
+            console.log('[Splash] Removed message listener from window.');
+          } catch (err) {}
           listenerAttachedRef.current = false;
-          injectedOnceRef.current = false;
         };
-      } else if (!isAvailable()) {
-        window.addEventListener('message', handleMessage);
-        console.log('[Splash] Added "message" event listener to window.');
-        cleanupRef.current = () => {
-          window.removeEventListener('message', handleMessage);
-          console.log('[Splash] Removed "message" event listener from window.');
-        };
-        // simulate a mock message on web fallback so login completes
-        postMockMessageToWindow();
       }
     } catch (e) {
       console.error('Failed to open login InAppBrowser', e);
     }
   };
 
+  // logo animation on mount
   useEffect(() => {
     const logoTimer = setTimeout(() => setLogoAnimation(true), 100);
     return () => clearTimeout(logoTimer);
   }, []);
 
-  // Cleanup listeners on unmount
+  // cleanup listeners on unmount
   useEffect(() => {
     return () => {
       try {
@@ -309,9 +282,12 @@ const Splash: React.FC = () => {
     };
   }, []);
 
-  // Drive login flow based on auth state
+  // Drive login flow based on auth state (preserve original timings & UI)
   useEffect(() => {
+    console.log('[DEBUG] 🔄 Auth state changed:', { isAuthenticated, token, isWebViewOpen });
+    
     if (isAuthenticated || token) {
+      console.log('[DEBUG] ✅ User authenticated, starting welcome flow');
       const welcomeTimer = setTimeout(() => {
         setShowWelcome(true);
         setTimeout(() => setWelcomeAnimation(true), 20);
@@ -322,6 +298,7 @@ const Splash: React.FC = () => {
         clearTimeout(navTimer);
       };
     } else {
+      console.log('[DEBUG] 🔓 User not authenticated, opening login browser');
       // Open login webview shortly after logo animates
       const openTimer = setTimeout(() => {
         if (!isWebViewOpen) openLoginBrowser();
@@ -333,29 +310,28 @@ const Splash: React.FC = () => {
   // Reset splash states when auth state changes (e.g., after logout)
   useEffect(() => {
     if (!isAuthenticated && !token) {
-      // Reset all splash states when not authenticated
+      console.log('[DEBUG] 🔄 Resetting splash states (logout detected)');
       setShowWelcome(false);
       setWelcomeAnimation(false);
       setSuccessfulLogin(false);
       setIsFirstTime(true);
       setIsWebViewOpen(false);
-      setLogoAnimation(false); // Reset logo animation
-      
-      // Cleanup any existing browser references
+      setLogoAnimation(false);
+
       try {
         cleanupRef.current?.();
         if (browserRef.current) {
           browserRef.current = null;
         }
       } catch {}
-      
-      // Restart logo animation after a short delay
+
       const restartLogoTimer = setTimeout(() => setLogoAnimation(true), 100);
       return () => clearTimeout(restartLogoTimer);
     }
   }, [isAuthenticated, token]);
 
   const handleRetry = () => {
+    console.log('[DEBUG] 🔄 Retry button clicked');
     if (!isWebViewOpen) {
       setShowWelcome(false);
       openLoginBrowser();

@@ -9,8 +9,8 @@ const AIPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
-        <div className="w-full h-full bg-[#E0E0E0] p-4 pb-28 text-lg text-[#333]">
+      <IonContent scrollY={false}>
+        <div className="w-full h-full bg-[#E0E0E0] px-4 pb-24 text-lg text-[#333] pt-16">
           <AIComponent />
         </div>
       </IonContent>
