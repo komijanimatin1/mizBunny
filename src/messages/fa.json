@@ -1,0 +1,61 @@
+{
+  "app": {
+    "name": "اتاق دیجیتال تهران",
+    "tagline": "درگاه هوشمند خدمات کسب و کار"
+  },
+  "navigation": {
+    "home": "خانه",
+    "assistant": "دستیار",
+    "profile": "حساب کاربری"
+  },
+  "auth": {
+    "loginAgain": "ورود مجدد",
+    "welcome": "به میزبانی خوش آمدید",
+    "loginRequired": "برای مشاهده پروفایل وارد شوید"
+  },
+  "profile": {
+    "profit": "میزان سود",
+    "profitAmount": "۱,۰۰۰,۰۰۰ تومان",
+    "subscription": "اشتراک شما",
+    "subscriptionDays": "۲۳۴ روز باقی مانده",
+    "additionalInfo": "اطلاعات تکمیلی",
+    "certificates": "گواهی ها",
+    "receipts": "رسید خدمات",
+    "settings": "تنظیمات",
+    "logout": "خروج از حساب",
+    "logoutConfirm": "آیا مطمئن هستید می‌خواهید خارج شوید؟"
+  },
+  "thirdParty": {
+    "title": "سکوی همکاران تجاری",
+    "services": {
+      "internationalTrade": "خدمات تجارت بین‌الملل",
+      "internationalTradeDesc": "سرویس بازرگانی",
+      "business": "خدمات کسب و کار",
+      "businessDesc": "سرویس الکترونیک",
+      "financing": "خدمات تامین‌مالی",
+      "financingDesc": "سرویس سرمایه‌گذاری"
+    }
+  },
+  "events": {
+    "businessManagement": "رویداد تخصصی مدیریت بیزینس دیجیتال",
+    "businessManagementCta": "کسب اطلاعات بیشتر",
+    "digitalMarketing": "کارگاه آموزشی بازاریابی دیجیتال",
+    "digitalMarketingCta": "ثبت نام کنید",
+    "growthStrategies": "سمینار استراتژی‌های رشد کسب و کار",
+    "growthStrategiesCta": "مشاهده جزئیات"
+  },
+  "transfer": {
+    "loading": "در حال بارگذاری...",
+    "transferringTo": "شما در حال انتقال به سرویس {service} هستید...",
+    "transfer": "انتقال",
+    "backToRoom": "بازگشت به اتاق دیجیتال"
+  },
+  "ai": {
+    "consultation": "مشاوره"
+  },
+  "common": {
+    "loading": "در حال بارگذاری...",
+    "error": "خطا"
+  }
+}
+

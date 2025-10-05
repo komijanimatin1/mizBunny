@@ -1,6 +1,8 @@
 import React from 'react'
+import { useTranslations } from 'next-intl'
 
 export default function Banner() {
+    const t = useTranslations('app');
     return (
         <div
             className="w-full h-32 p-4 flex flex-row justify-between items-center "
@@ -19,10 +21,10 @@ export default function Banner() {
                 <div className="flex flex-col gap-2 text-xs line-height-normal">
                     {/* company name */}
                     <span className='font-medium text-[#0070F0]'>
-                        اتاق دیجیتال تهران
+                        {t('name')}
                     </span>
                     <p className=' font-bold text-[#003777]'>
-                        درگاه هوشمند خدمات کسب و کار
+                        {t('tagline')}
                     </p>
                 </div>
 

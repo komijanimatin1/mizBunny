@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IonPage, IonContent } from '@ionic/react';
+import { useTranslations } from 'next-intl';
 import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import ProgressBar from 'progressbar.js';
 
@@ -94,6 +95,7 @@ interface FacilityData {
   title: string;
   icon: string;
   color: string;
+  backgroundColor: string;
 }
 
 interface LocationState {
@@ -105,6 +107,7 @@ interface TransferPageProps {
 }
 
 const Transfer: React.FC<TransferPageProps> = () => {
+  const t = useTranslations('transfer');
   const history = useHistory();
   const location = useLocation<LocationState>();
   const { openBrowser, showBrowser, pageLoaded } = useInAppBrowser();
@@ -117,13 +120,15 @@ const Transfer: React.FC<TransferPageProps> = () => {
     const title = params.get('title');
     const icon = params.get('icon');
     const color = params.get('color');
+    const backgroundColor = params.get('backgroundColor');
 
     if (url && title && icon && color) {
       setFacilityData({
         url,
         title,
         icon,
-        color
+        color,
+        backgroundColor: backgroundColor || color
       });
     } else {
       // If required data is missing from query params, redirect to home
@@ -166,7 +171,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
       <IonPage className="bg-white fixed top-0 left-0 w-full h-full z-[9999]">
         <IonContent fullscreen className="flex items-center justify-center h-screen w-screen" style={{ '--background': 'white' } as any}>
           <div className="w-full h-full bg-white flex flex-col items-center justify-center">
-            <p className="text-lg font-medium text-[#0D0026]">در حال بارگذاری...</p>
+            <p className="text-lg font-medium text-[#0D0026]">{t('loading')}</p>
           </div>
         </IonContent>
       </IonPage>
@@ -203,7 +208,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
 
             {/* Transfer message */}
             <p className="text-xs font-medium text-[#0D0026] leading-none">
-              شما در حال انتقال به سرویس {facilityData.title} هستید...
+              {t('transferringTo', { service: facilityData.title })}
             </p>
           </div>
 
@@ -217,7 +222,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
                 }`}
               style={{ backgroundColor: pageLoaded ? facilityData.color : '#bfbfbf' }}
             >
-              <span className="text-xs font-medium text-white leading-none">انتقال</span>
+              <span className="text-xs font-medium text-white leading-none">{t('transfer')}</span>
             </button>
 
             {/* Return to Digital Room Button */}
@@ -226,7 +231,7 @@ const Transfer: React.FC<TransferPageProps> = () => {
               className="flex h-8 p-2 justify-center items-center gap-2 flex-[1_0_0] rounded-lg"
               style={{ border: '1px solid #E0E0E0' }}
             >
-              <span className="text-xs font-medium text-[#0D0026] leading-none">بازگشت به اتاق دیجیتال</span>
+              <span className="text-xs font-medium text-[#0D0026] leading-none">{t('backToRoom')}</span>
             </button>
           </div>
         </div>

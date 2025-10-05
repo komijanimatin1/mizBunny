@@ -28,6 +28,7 @@
     "cordova-plugin-clear-data": "^1.0.0",
     "cordova-plugin-inappbrowser": "github:komijanimatin1/custom-cordova-plugin-inappbrowser",
     "ionicons": "^7.4.0",
+    "next-intl": "^4.3.9",
     "progressbar.js": "^1.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",

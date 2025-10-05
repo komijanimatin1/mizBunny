@@ -1,6 +1,8 @@
 import { useAuthStore } from '../../stores/authStore';
+import { useTranslations } from 'next-intl';
 
 function UserDetails() {
+  const t = useTranslations('profile');
   const { user } = useAuthStore();
 
   return (
@@ -34,13 +36,13 @@ function UserDetails() {
               className="mb-1 text-[12px] text-[#1E1E1E]"
               // style={{ color: '#1E1E1E', fontFamily: 'IRANYekanX', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}
             >
-              میزان سود
+              {t('profit')}
             </span>
             <span
               className="px-3 py-1 rounded-full text-[12px] bg-[#CBE7FE] text-[#003FB8]"
               // style={{ background: '#CBE7FE', color: '#003FB8', fontFamily: 'IRANYekanXFaNum', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}
             >
-              ۱,۰۰۰,۰۰۰ تومان
+              {t('profitAmount')}
             </span>
           </div>
           <div className="flex flex-col items-center text-xs font-normal leading-normal">
@@ -48,13 +50,13 @@ function UserDetails() {
               className="mb-1 text-[12px] text-[#1E1E1E]"
               // style={{ color: '#1E1E1E', fontFamily: 'IRANYekanX', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}
             >
-              اشتراک شما
+              {t('subscription')}
             </span>
             <span
               className="px-3 py-1 rounded-full text-[12px] bg-[#CBE7FE] text-[#003FB8]"
               // style={{ background: '#CBE7FE', color: '#003FB8', fontFamily: 'IRANYekanXFaNum', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}
             >
-              ۲۳۴ روز باقی مانده
+              {t('subscriptionDays')}
             </span>
           </div>
         </div>

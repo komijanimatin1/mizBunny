@@ -1,10 +1,12 @@
 import { IonContent, IonPage, IonButton } from '@ionic/react';
 import { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useTranslations } from 'next-intl';
 import { useInAppBrowser } from '../hooks/useInAppBrowser';
 import { useAuthStore } from '../stores/authStore';
 
 const Splash: React.FC = () => {
+  const t = useTranslations('auth');
   console.log('[DEBUG] Splash component rendering');
   const [logoAnimation, setLogoAnimation] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -22,7 +24,7 @@ const Splash: React.FC = () => {
   const browserRef = useRef<any>(null);
   const listenerAttachedRef = useRef<boolean>(false);
 
-  const LOGIN_URL = 'https://tccim.mizbunny.com?isLauncherLogin=true&launcherProfileUpdated=true';
+  const LOGIN_URL = 'https://dev.app.arnacore.ir';
   console.log('[DEBUG] LOGIN_URL:', LOGIN_URL);
 
   // --- finishLogin: قبول token و refreshToken و userData ---
@@ -192,16 +194,16 @@ const Splash: React.FC = () => {
         'footer=no',
         'backbutton=yes',
         'hidenavigationbuttons=no',
-        'closebuttoncaption=بازگشت به صفحه اصلی',
+        `closebuttoncaption=${t('loginAgain')}`,
         'closebuttoncolor=#000000',
         'toolbarcolor=#F0F0F0',
         'showurl=no',
         'gestures=no',
         'zoom=no',
-        'clearcache=yes',
+        'clearcache=no',
         'disallowoverscroll=yes',
-        'clearsessioncache=yes',
-        'cleardata=yes'
+        'clearsessioncache=no',
+        'cleardata=no'
       ].join(',');
 
       setIsFirstTime(false);
@@ -359,7 +361,7 @@ const Splash: React.FC = () => {
                   className="bg-white text-black rounded-lg font-medium"
                   style={{ border: '2px solid black' }}
                 >
-                  ورود مجدد
+                  {t('loginAgain')}
                 </IonButton>
               </div>
             )}
@@ -369,7 +371,7 @@ const Splash: React.FC = () => {
             <div className={`absolute bottom-40 transition-all duration-1000 ease-out antialiased ${
               welcomeAnimation ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
             }`}>
-              <span className="text-xl">به میزبانی خوش آمدید</span>
+              <span className="text-xl">{t('welcome')}</span>
             </div>
           )}
         </div>

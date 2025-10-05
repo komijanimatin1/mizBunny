@@ -1,0 +1,61 @@
+{
+  "app": {
+    "name": "Tehran Digital Chamber",
+    "tagline": "Smart Business Services Gateway"
+  },
+  "navigation": {
+    "home": "Home",
+    "assistant": "Assistant",
+    "profile": "Profile"
+  },
+  "auth": {
+    "loginAgain": "Login Again",
+    "welcome": "Welcome to Mizbani",
+    "loginRequired": "Please login to view your profile"
+  },
+  "profile": {
+    "profit": "Profit Amount",
+    "profitAmount": "1,000,000 Toman",
+    "subscription": "Your Subscription",
+    "subscriptionDays": "234 Days Remaining",
+    "additionalInfo": "Additional Information",
+    "certificates": "Certificates",
+    "receipts": "Service Receipts",
+    "settings": "Settings",
+    "logout": "Logout",
+    "logoutConfirm": "Are you sure you want to logout?"
+  },
+  "thirdParty": {
+    "title": "Business Partners Platform",
+    "services": {
+      "internationalTrade": "International Trade Services",
+      "internationalTradeDesc": "Trading Service",
+      "business": "Business Services",
+      "businessDesc": "Electronic Service",
+      "financing": "Financing Services",
+      "financingDesc": "Investment Service"
+    }
+  },
+  "events": {
+    "businessManagement": "Digital Business Management Specialized Event",
+    "businessManagementCta": "Learn More",
+    "digitalMarketing": "Digital Marketing Workshop",
+    "digitalMarketingCta": "Register Now",
+    "growthStrategies": "Business Growth Strategies Seminar",
+    "growthStrategiesCta": "View Details"
+  },
+  "transfer": {
+    "loading": "Loading...",
+    "transferringTo": "You are being transferred to {service} service...",
+    "transfer": "Transfer",
+    "backToRoom": "Back to Digital Room"
+  },
+  "ai": {
+    "consultation": "Consultation"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error"
+  }
+}
+

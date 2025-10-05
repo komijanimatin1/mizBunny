@@ -1,6 +1,5 @@
 import { useInAppBrowser } from '../../hooks/useInAppBrowser';
  
-
 const ServicesSection = () => {
   const { openBrowser } = useInAppBrowser();
 
@@ -25,16 +24,16 @@ const ServicesSection = () => {
       
       {/* Main Services - Two cards side by side */}
       <div className="flex flex-row justify-between mb-2.5 w-full">
-        <div className="h-28 bg-[#F6F6F6] rounded-xl text-center transition-transform duration-200 ease-in-out flex-shrink-0 cursor-pointer hover:-translate-y-0.5 w-[49%] min-h-[90px] flex flex-col justify-center items-center gap-3" onClick={() => handleServiceClick('https://casie.arnacore.ir/', 'کارتابل')}>
+        <div className="h-28 bg-[#F6F6F6] rounded-xl text-center transition-transform duration-200 ease-in-out flex-shrink-0 cursor-pointer hover:-translate-y-0.5 w-[49%] min-h-[90px] flex flex-col justify-center items-center gap-3" onClick={() => handleServiceClick('https://dev.casie.arnacore.ir/', 'کارتابل')}>
           <div className="flex flex-col items-center">
             <img src="/icons/services-icons/کارتابل.png" alt="کارتابل" className="w-8 h-8 aspect-square object-contain" />
             <div className="text-[14px] font-medium text-[#333] font-normal" >کارتابل</div>
           </div>
         </div>
-        <div className="h-28 bg-[#F6F6F6] rounded-xl text-center transition-transform duration-200 ease-in-out flex-shrink-0 cursor-pointer hover:-translate-y-0.5 w-[49%] min-h-[90px] flex flex-col justify-center items-center gap-3" onClick={() => handleServiceClick('https://Media.dccim.ir/', 'رسانه')}>
+        <div className="h-28 bg-[#F6F6F6] rounded-xl text-center transition-transform duration-200 ease-in-out flex-shrink-0 cursor-pointer hover:-translate-y-0.5 w-[49%] min-h-[90px] flex flex-col justify-center items-center gap-3" onClick={() => handleServiceClick('https://dev.media.arnacore.ir/', 'رسانه')}>
           <div className="flex flex-col items-center">
             <img src="/icons/services-icons/رسانه.png" alt="رسانه" className="w-8 h-8 aspect-square object-contain" />
-            <div className="text-[14px] font-medium text-[#333] font-normal" >رسانه</div>
+            <div className="text-[14px] font-medium text-[#333] font-normal" >اخبار و چندرسانه</div>
           </div>
         </div>
       </div>
@@ -52,7 +51,7 @@ const ServicesSection = () => {
             <div className="text-[12px] text-[#333] font-normal" >فرصت های تجاری</div>
           </div>
         </div>
-        <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://casie.arnacore.ir/services/event', 'تقویم')}>
+        <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://dev.casie.arnacore.ir/services/event', 'تقویم')}>
           <div className="flex flex-col items-center">
             <img src="/icons/services-icons/تقویم.png" alt="تقویم" className="w-8 h-8 aspect-square object-contain" />
             <div className="text-[12px] text-[#333] font-normal" >تقویم</div>
@@ -61,10 +60,10 @@ const ServicesSection = () => {
       </div>
 
       <div className="flex flex-row justify-between rounded-xl w-full mt-2.5">
-        <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://casie.arnacore.ir/services/counseling', 'مشاوره')}>
+        <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://dev.casie.arnacore.ir/services/counseling', 'مشاوره')}>
           <div className="flex flex-col items-center">
             <img src="/icons/services-icons/مشاوره.png" alt="مشاوره" className="w-8 h-8 aspect-square object-contain" />
-            <div className="text-[12px] text-[#333] font-normal" >مشاوره</div>
+            <div className="text-[12px] text-[#333] font-normal" >کیلینیک مشاوره</div>
           </div>
         </div>
         <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://dir.tccim.ir/', 'راهنمای تجاری')}>
@@ -73,10 +72,10 @@ const ServicesSection = () => {
             <div className="text-[12px] text-[#333] font-normal" >راهنمای تجاری</div>
           </div>
         </div>
-        <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://casie.arnacore.ir/services/course', 'دوره ها')}>
+        <div className="w-[32%] bg-[#F6F6F6] rounded-xl min-h-20 flex gap-2 flex-col justify-center items-center cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out" onClick={() => handleServiceClick('https://dev.casie.arnacore.ir/services/course', 'دوره ها')}>
           <div className="flex flex-col items-center">
             <img src="/icons/services-icons/دوره ها.png" alt="دوره ها" className="w-8 h-8 aspect-square object-contain" />
-            <div className="text-[12px] text-[#333] font-normal" >دوره ها</div>
+            <div className="text-[12px] text-[#333] font-normal" > آموزش و توانمندسازی</div>
           </div>
         </div>
       </div>

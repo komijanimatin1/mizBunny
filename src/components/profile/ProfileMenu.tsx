@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
+import { useTranslations } from 'next-intl';
 
 type ProfileMenuProps = {
   onLogout: () => void;
@@ -25,24 +26,25 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   onOpenReceipts,
   onOpenSettings,
 }) => {
+  const t = useTranslations('profile');
   const items: MenuItem[] = [
     {
-      title: 'اطلاعات تکمیلی',
+      title: t('additionalInfo'),
       iconSrc: '/icons/profile-icons/Person%20Info.svg',
       onClick: onOpenDetails,
     },
     {
-      title: 'گواهی ها',
+      title: t('certificates'),
       iconSrc: '/icons/profile-icons/Certificate.svg',
       onClick: onOpenCertificates,
     },
     {
-      title: 'رسید خدمات',
+      title: t('receipts'),
       iconSrc: '/icons/profile-icons/Receipt.svg',
       onClick: onOpenReceipts,
     },
     {
-      title: 'تنظیمات',
+      title: t('settings'),
       iconSrc: '/icons/profile-icons/Settings.svg',
       onClick: onOpenSettings,
     },
@@ -71,7 +73,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       <button
         type="button"
         onClick={() => {
-          if (window.confirm('آیا مطمئن هستید می‌خواهید خارج شوید؟')) {
+          if (window.confirm(t('logoutConfirm'))) {
             onLogout();
           }
         }}
@@ -79,7 +81,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       >
         <span className="flex items-center gap-3">
           <img src={'/icons/profile-icons/Sign%20Out.svg'} alt="" className="w-5 h-5" />
-          <span className="text-[15px]">خروج از حساب</span>
+          <span className="text-[15px]">{t('logout')}</span>
         </span>
         <Icon icon="fluent:chevron-left-12-filled" width="12" height="12" className="opacity-70" />
       </button>

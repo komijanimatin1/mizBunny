@@ -1,14 +1,16 @@
 import { Icon } from "@iconify/react";
+import { useTranslations } from "next-intl";
 import "./HorizontalScroll.css";
 import { useRef, useState, useEffect } from "react";
 // @ts-ignore scroll-snap ships types but its DTS isn't declared as a module; ignore to use default import
 import createScrollSnap from "scroll-snap";
 
 export default function HorizontalScroll() {
+  const t = useTranslations('events');
   const snippets = [
-    { id: 1, title: "رویداد تخصصی مدیریت بیزینس دیجیتال", cta: "کسب اطلاعات بیشتر" },
-    { id: 2, title: "کارگاه آموزشی بازاریابی دیجیتال", cta: "ثبت نام کنید" },
-    { id: 3, title: "سمینار استراتژی‌های رشد کسب و کار", cta: "مشاهده جزئیات" },
+    { id: 1, title: t('businessManagement'), cta: t('businessManagementCta') },
+    { id: 2, title: t('digitalMarketing'), cta: t('digitalMarketingCta') },
+    { id: 3, title: t('growthStrategies'), cta: t('growthStrategiesCta') },
   ];
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);

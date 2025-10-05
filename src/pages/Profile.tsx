@@ -1,11 +1,14 @@
 import React from 'react';
 import { IonContent, IonPage } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
+import { useTranslations } from 'next-intl';
 import { useBackButton } from '../hooks/useBackButton';
 import { useAuthStore } from '../stores/authStore';
 import UserDetails from '../components/profile/UserDetails';
 import ProfileMenu from '../components/profile/ProfileMenu';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { Preferences } from '@capacitor/preferences';
+import { useInAppBrowser } from '../hooks/useInAppBrowser';
 // ClearData plugin (cordova-plugin-clear-data) is exposed as a global
 declare const ClearData: {
   cache: (success?: () => void, error?: (err: string) => void) => void;
@@ -15,6 +18,8 @@ declare const ClearData: {
 
 const Profile: React.FC = () => {
   // Handle hardware back button navigation
+  const t = useTranslations('auth');
+  const { openBrowser, closeBrowser } = useInAppBrowser();
   useBackButton();
   const { user, isAuthenticated, logout } = useAuthStore();
   const history = useHistory();
@@ -49,7 +54,11 @@ const Profile: React.FC = () => {
       }
   
       console.log('[RESET] تمام داده‌ها پاک شد.');
-  
+      
+      // clear webview cache and persistent data via native plugin when available
+      openBrowser('about:blank', '_blank', 'clearcache=yes,clearsessioncache=yes,cleardata=yes');
+      closeBrowser();
+
     } catch (error) {
       console.error('[RESET] خطا در فرآیند پاک‌سازی:', error);
     }
@@ -81,7 +90,7 @@ const Profile: React.FC = () => {
         <IonContent>
           <div className="w-full h-full bg-[#E0E0E0] p-4 text-lg text-[#333]">
             <div className="bg-white w-full h-[calc(100%-4rem)] p-4 rounded-2xl flex items-center justify-center pb-28">
-              <div className="text-xl font-semibold text-[#666]">برای مشاهده پروفایل وارد شوید</div>
+              <div className="text-xl font-semibold text-[#666]">{t('loginRequired')}</div>
             </div>
           </div>
         </IonContent>
@@ -97,6 +106,9 @@ const Profile: React.FC = () => {
         <div className="w-full h-full bg-[#E0E0E0] p-4 pb-24 text-lg text-[#333] pt-16">
           <div className="bg-white w-full h-full pt-0 px-4 rounded-2xl overflow-auto [&::-webkit-scrollbar]:hidden flex flex-col gap-4 pb-4">
             <UserDetails />
+            <div className="flex justify-end py-2">
+              <LanguageSwitcher />
+            </div>
             <ProfileMenu onLogout={handleLogout} />
           </div>
         </div>
